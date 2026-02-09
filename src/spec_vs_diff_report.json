@@ -1,0 +1,61 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-04T09:38:19.006Z",
+  "summary": "Diff adds domain/app-name validation + an automated mainnet publish/record script, and enhances the deployment artifact recorder. However, the diff does not provide evidence of an actual completed IC mainnet deploy, a recorded non-empty live URL/IDs in DEPLOYMENT_LINKS.md, or that the validated app/domain name is actually used to prevent the publish-time domain validation failure. Additionally, many frontend pages/styles appear modified beyond the deploy/link-recording scope.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
+      "reason": "The diff only adds scripts/runbooks; it does not show evidence of an actual mainnet deployment having been completed or a concrete frontend canister URL being produced/shared as an artifact in-repo.",
+      "evidence": [
+        "frontend/scripts/publishMainnetAndRecord.js",
+        "frontend/DEPLOYMENT_LINKS.md"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens.",
+      "reason": "A validator/normalizer is added, but the publish script (as shown) runs `dfx deploy --network ic` without showing any step that applies the normalized app/domain name to the actual publish/deploy configuration (e.g., passing it into the publish pipeline or updating relevant config). Therefore it’s not evidenced that the domain validation failure is actually prevented.",
+      "evidence": [
+        "frontend/scripts/domainName.js",
+        "frontend/scripts/publishMainnetAndRecord.js"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "requirement": "After a successful mainnet deploy, update frontend/DEPLOYMENT_LINKS.md with the latest frontend and backend canister IDs and the generated public website link using the existing recordDeploymentArtifact.js script (or an equivalent automated step).",
+      "reason": "DEPLOYMENT_LINKS.md in the diff still contains a placeholder 'Not yet deployed' section, not non-empty canister IDs and a live URL matching `https://<frontendId>.icp0.io`. The recorder script is enhanced, but the required updated artifact content is not present in the diff.",
+      "evidence": [
+        "frontend/DEPLOYMENT_LINKS.md",
+        "frontend/scripts/recordDeploymentArtifact.js"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Large set of frontend UI/page/style changes (dashboard/bugs/test cases/test runs pages, app shell, router, Tailwind/theme) not directly required for enabling mainnet publish and recording the deployment link.",
+      "reason": "BuildRequest non-goals explicitly avoid adding new product features beyond enabling successful publish/link recording; the diff summary indicates many application pages and UI infrastructure were modified.",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Addition of a new deployment runbook document (DEPLOY_MAINNET.md).",
+      "reason": "Not explicitly requested; only automated recording via recordDeploymentArtifact.js (or equivalent automated step) was required. Documentation may be helpful but is extra relative to stated requirements.",
+      "evidence": [
+        "frontend/DEPLOY_MAINNET.md"
+      ]
+    }
+  ],
+  "confidence": 0.66,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/DEPLOYMENT_LINKS.md",
+    "frontend/DEPLOY_MAINNET.md",
+    "frontend/scripts/domainName.js",
+    "frontend/scripts/publishMainnetAndRecord.js",
+    "frontend/scripts/recordDeploymentArtifact.js",
+    "project_state.json"
+  ]
+}

@@ -1,2 +1,3 @@
-# publish-qa-management-app-to-ic-mainnet-and-record-public-link
-Exported from Caffeine project: Publish QA Management app to IC mainnet and record public link
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

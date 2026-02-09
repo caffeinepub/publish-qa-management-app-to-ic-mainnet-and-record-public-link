@@ -1,0 +1,78 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "IC mainnet publish flow hardening and deployment link recording (frontend-only)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Provide an automated, repeatable mainnet publish/deploy flow that completes successfully and prints a shareable public icp0.io URL for the deployed frontend canister.",
+      "acceptanceCriteria": [
+        "A successful `dfx deploy --network ic` (or equivalent publish pipeline) run completes without the domain validation error",
+        "A public URL of the form `https://<frontend_canister_id>.icp0.io` is produced and shared as the live app link"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/scripts/publishMainnetAndRecord.js",
+          "operation": "create",
+          "description": "Create a Node.js CLI script that (1) validates/normalizes a provided app/domain name per the publishing constraints, (2) runs the mainnet publish/deploy command, (3) resolves the deployed frontend/backend canister IDs, and (4) outputs the resulting public URL `https://<frontendId>.icp0.io`. Use the github-export-icp-cli template conventions for deployment scripting where applicable; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/DEPLOY_MAINNET.md",
+          "operation": "modify",
+          "description": "Update the mainnet deployment runbook to use the new automated publish+record script and document how to obtain/share the resulting `https://<frontendId>.icp0.io` link after a successful deploy. Mention the github-export-icp-cli workflow alignment at a high level; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Prevent publish-time domain/app-name validation failures by normalizing or rejecting invalid names with clear English guidance and an example valid hyphenated name.",
+      "acceptanceCriteria": [
+        "Publishing no longer fails due to the domain/app name containing spaces or other invalid characters",
+        "If an invalid name is provided, the flow clearly indicates the constraint in English and provides an example of a valid hyphenated name"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/scripts/domainName.js",
+          "operation": "create",
+          "description": "Add a small shared helper module that normalizes and validates a user-provided domain/app name to the required format (5–50 chars; only letters, numbers, hyphens). Include logic to (a) strip/replace invalid characters (e.g., spaces -> hyphens) and (b) fail fast with a clear error message and a concrete valid example if it cannot produce a compliant name."
+        },
+        {
+          "path": "frontend/scripts/publishMainnetAndRecord.js",
+          "operation": "modify",
+          "description": "Integrate the domain/app-name helper so the publish flow always uses a compliant name and surfaces a clear, English constraint message (with example) before attempting the mainnet publish/deploy when the provided value is invalid."
+        },
+        {
+          "path": "frontend/DEPLOY_MAINNET.md",
+          "operation": "modify",
+          "description": "Document the domain/app-name constraints (5–50 chars; letters/numbers/hyphens) and describe how the publish script normalizes input and/or fails with an actionable message and a valid hyphenated example."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Automatically record mainnet deployment artifacts by updating frontend/DEPLOYMENT_LINKS.md with the latest canister IDs and the derived public website link.",
+      "acceptanceCriteria": [
+        "`frontend/DEPLOYMENT_LINKS.md` contains a non-empty `Live Application URL` entry",
+        "`frontend/DEPLOYMENT_LINKS.md` contains non-empty frontend and backend canister IDs",
+        "The recorded public URL matches the frontend canister ID in the same file (i.e., `https://<frontendId>.icp0.io`)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/scripts/recordDeploymentArtifact.js",
+          "operation": "modify",
+          "description": "Enhance the recorder script to support an automated mode that can resolve the latest mainnet frontend/backend canister IDs when not explicitly provided (while preserving current CLI/env usage). Ensure it always writes `frontend/DEPLOYMENT_LINKS.md` with non-empty IDs and a `Live Application URL` that matches `https://<frontendId>.icp0.io`."
+        },
+        {
+          "path": "frontend/DEPLOYMENT_LINKS.md",
+          "operation": "modify",
+          "description": "Adjust the placeholder content (if any) to clearly indicate it is generated/overwritten by `frontend/scripts/recordDeploymentArtifact.js`, and ensure the file remains a stable target for the automated recorder output (no manual-only format expectations)."
+        },
+        {
+          "path": "frontend/DEPLOY_MAINNET.md",
+          "operation": "modify",
+          "description": "Update the runbook to require running `frontend/scripts/recordDeploymentArtifact.js` (or the combined publish+record script) immediately after successful mainnet deploy, and describe where to find the updated `Live Application URL` and canister IDs in `frontend/DEPLOYMENT_LINKS.md`."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-04T09:38:19.045Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/scripts/publishMainnetAndRecord.js",
+          "frontend/DEPLOY_MAINNET.md"
+        ],
+        "matchedFiles": [
+          "frontend/scripts/publishMainnetAndRecord.js",
+          "frontend/DEPLOY_MAINNET.md"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens (e.g., normalize user-provided names by removing spaces and invalid characters).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/scripts/domainName.js",
+          "frontend/scripts/publishMainnetAndRecord.js",
+          "frontend/DEPLOY_MAINNET.md"
+        ],
+        "matchedFiles": [
+          "frontend/scripts/domainName.js",
+          "frontend/scripts/publishMainnetAndRecord.js",
+          "frontend/DEPLOY_MAINNET.md"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "After a successful mainnet deploy, update `frontend/DEPLOYMENT_LINKS.md` with the latest frontend and backend canister IDs and the generated public website link using the existing `frontend/scripts/recordDeploymentArtifact.js` script (or an equivalent automated step).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/scripts/recordDeploymentArtifact.js",
+          "frontend/DEPLOYMENT_LINKS.md",
+          "frontend/DEPLOY_MAINNET.md"
+        ],
+        "matchedFiles": [
+          "frontend/scripts/recordDeploymentArtifact.js",
+          "frontend/DEPLOYMENT_LINKS.md",
+          "frontend/DEPLOY_MAINNET.md"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/DEPLOYMENT_LINKS.md",
+    "frontend/DEPLOY_MAINNET.md",
+    "frontend/scripts/domainName.js",
+    "frontend/scripts/publishMainnetAndRecord.js",
+    "frontend/scripts/recordDeploymentArtifact.js",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

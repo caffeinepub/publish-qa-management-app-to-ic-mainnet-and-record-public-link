@@ -1,0 +1,64 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-complete-a-successful-internet-computer-mainnet-publish-deploy-of-the-existing-qa-management-app-and-produce-a-shareable-public-website-url-for-the-deployed-frontend-canister",
+      "featureTitle": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
+      "files": [
+        "frontend/DEPLOY_MAINNET.md",
+        "frontend/scripts/publishMainnetAndRecord.js"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-resolve-the-publish-time-domain-validation-failure-by-ensuring-the-deployment-publish-flow-uses-a-domain-app-name-that-is-5-50-characters-and-contains-only-letters-numbers-and-hyphens-e-g-normalize-user-provided-names-by-removing-spaces-and-invalid-characters",
+      "featureTitle": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens (e.g., normalize user-provided names by removing spaces and invalid characters).",
+      "files": [
+        "frontend/DEPLOY_MAINNET.md",
+        "frontend/scripts/domainName.js",
+        "frontend/scripts/publishMainnetAndRecord.js"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-after-a-successful-mainnet-deploy-update-frontend-deployment-links-md-with-the-latest-frontend-and-backend-canister-ids-and-the-generated-public-website-link-using-the-existing-frontend-scripts-recorddeploymentartifact-js-script-or-an-equivalent-automated-step",
+      "featureTitle": "After a successful mainnet deploy, update `frontend/DEPLOYMENT_LINKS.md` with the latest frontend and backend canister IDs and the generated public website link using the existing `frontend/scripts/recordDeploymentArtifact.js` script (or an equivalent automated step).",
+      "files": [
+        "frontend/DEPLOYMENT_LINKS.md",
+        "frontend/DEPLOY_MAINNET.md",
+        "frontend/scripts/recordDeploymentArtifact.js"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

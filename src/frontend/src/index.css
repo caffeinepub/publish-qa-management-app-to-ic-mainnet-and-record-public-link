@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.5rem;
+        
+        /* Neutral base colors */
+        --background: 0.99 0 0;
+        --foreground: 0.15 0 0;
+        
+        /* Card surfaces */
+        --card: 1 0 0;
+        --card-foreground: 0.15 0 0;
+        
+        /* Popover surfaces */
+        --popover: 1 0 0;
+        --popover-foreground: 0.15 0 0;
+        
+        /* Primary: Deep forest green */
+        --primary: 0.35 0.08 155;
+        --primary-foreground: 0.99 0 0;
+        
+        /* Secondary: Warm gray */
+        --secondary: 0.94 0.005 90;
+        --secondary-foreground: 0.15 0 0;
+        
+        /* Muted: Light gray */
+        --muted: 0.96 0.005 90;
+        --muted-foreground: 0.50 0.01 90;
+        
+        /* Accent: Sage green */
+        --accent: 0.92 0.03 145;
+        --accent-foreground: 0.25 0.05 155;
+        
+        /* Destructive: Warm red */
+        --destructive: 0.55 0.22 25;
+        --destructive-foreground: 0.99 0 0;
+        
+        /* Borders and inputs */
+        --border: 0.90 0.01 90;
+        --input: 0.90 0.01 90;
+        --ring: 0.35 0.08 155;
+        
+        /* Chart colors: Green/amber palette */
+        --chart-1: 0.60 0.15 145;
+        --chart-2: 0.45 0.12 155;
+        --chart-3: 0.70 0.12 85;
+        --chart-4: 0.55 0.10 65;
+        --chart-5: 0.40 0.08 165;
+        
+        /* Sidebar */
+        --sidebar: 0.99 0 0;
+        --sidebar-foreground: 0.15 0 0;
+        --sidebar-primary: 0.35 0.08 155;
+        --sidebar-primary-foreground: 0.99 0 0;
+        --sidebar-accent: 0.96 0.005 90;
+        --sidebar-accent-foreground: 0.15 0 0;
+        --sidebar-border: 0.90 0.01 90;
+        --sidebar-ring: 0.35 0.08 155;
+    }
+
+    .dark {
+        /* Dark neutral base */
+        --background: 0.12 0.01 155;
+        --foreground: 0.95 0.01 90;
+        
+        /* Dark card surfaces */
+        --card: 0.18 0.015 155;
+        --card-foreground: 0.95 0.01 90;
+        
+        /* Dark popover */
+        --popover: 0.15 0.015 155;
+        --popover-foreground: 0.95 0.01 90;
+        
+        /* Primary: Bright sage green */
+        --primary: 0.75 0.12 145;
+        --primary-foreground: 0.12 0.01 155;
+        
+        /* Secondary: Dark gray-green */
+        --secondary: 0.25 0.02 155;
+        --secondary-foreground: 0.95 0.01 90;
+        
+        /* Muted: Medium gray-green */
+        --muted: 0.22 0.02 155;
+        --muted-foreground: 0.65 0.02 145;
+        
+        /* Accent: Medium sage */
+        --accent: 0.30 0.04 145;
+        --accent-foreground: 0.95 0.01 90;
+        
+        /* Destructive: Bright warm red */
+        --destructive: 0.65 0.20 25;
+        --destructive-foreground: 0.12 0.01 155;
+        
+        /* Dark borders */
+        --border: 0.25 0.02 155;
+        --input: 0.25 0.02 155;
+        --ring: 0.75 0.12 145;
+        
+        /* Dark chart colors */
+        --chart-1: 0.65 0.15 145;
+        --chart-2: 0.55 0.12 155;
+        --chart-3: 0.75 0.12 85;
+        --chart-4: 0.60 0.10 65;
+        --chart-5: 0.50 0.08 165;
+        
+        /* Dark sidebar */
+        --sidebar: 0.15 0.015 155;
+        --sidebar-foreground: 0.95 0.01 90;
+        --sidebar-primary: 0.75 0.12 145;
+        --sidebar-primary-foreground: 0.12 0.01 155;
+        --sidebar-accent: 0.22 0.02 155;
+        --sidebar-accent-foreground: 0.95 0.01 90;
+        --sidebar-border: 0.25 0.02 155;
+        --sidebar-ring: 0.75 0.12 145;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+}
+

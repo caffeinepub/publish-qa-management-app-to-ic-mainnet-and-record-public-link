@@ -1,0 +1,74 @@
+{
+  "kind": "build_request",
+  "title": "Publish QA Management app to IC mainnet and record public link",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
+      "target": "unknown",
+      "source": {
+        "messageIds": [
+          "msg-4",
+          "msg-5"
+        ],
+        "quotes": [
+          "publish",
+          "Domain QA-testing app by akash must be between 5 and 50 characters and contain only letters, numbers, and hyphens."
+        ]
+      },
+      "acceptanceCriteria": [
+        "A successful `dfx deploy --network ic` (or equivalent publish pipeline) run completes without the domain validation error",
+        "A public URL of the form `https://<frontend_canister_id>.icp0.io` is produced and shared as the live app link"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens (e.g., normalize user-provided names by removing spaces and invalid characters).",
+      "target": "unknown",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Domain QA-testing app by akash must be between 5 and 50 characters and contain only letters, numbers, and hyphens."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Publishing no longer fails due to the domain/app name containing spaces or other invalid characters",
+        "If an invalid name is provided, the flow clearly indicates the constraint in English and provides an example of a valid hyphenated name"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "After a successful mainnet deploy, update `frontend/DEPLOYMENT_LINKS.md` with the latest frontend and backend canister IDs and the generated public website link using the existing `frontend/scripts/recordDeploymentArtifact.js` script (or an equivalent automated step).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4",
+          "msg-5"
+        ],
+        "quotes": [
+          "publish"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`frontend/DEPLOYMENT_LINKS.md` contains a non-empty `Live Application URL` entry",
+        "`frontend/DEPLOYMENT_LINKS.md` contains non-empty frontend and backend canister IDs",
+        "The recorded public URL matches the frontend canister ID in the same file (i.e., `https://<frontendId>.icp0.io`)"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under `frontend/src/components/ui` (read-only shadcn/ui sources).",
+    "Do not modify immutable frontend hook paths: `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`."
+  ],
+  "nonGoals": [
+    "Adding new product features (bugs/test cases/test runs) beyond enabling a successful publish and link recording",
+    "Changing authentication approach (Internet Identity remains the only supported auth)"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
