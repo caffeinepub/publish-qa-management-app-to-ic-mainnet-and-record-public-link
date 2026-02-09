@@ -8,10 +8,142 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const Severity = IDL.Variant({
+  'low' : IDL.Null,
+  'high' : IDL.Null,
+  'critical' : IDL.Null,
+  'medium' : IDL.Null,
+});
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
+export const TestCase = IDL.Record({
+  'id' : IDL.Nat,
+  'description' : IDL.Text,
+  'steps' : IDL.Text,
+});
+export const Bug = IDL.Record({
+  'id' : IDL.Nat,
+  'description' : IDL.Text,
+  'severity' : Severity,
+});
+export const CornerCase = IDL.Record({
+  'id' : IDL.Nat,
+  'description' : IDL.Text,
+  'scenario' : IDL.Text,
+});
+export const Website = IDL.Record({
+  'id' : IDL.Nat,
+  'url' : IDL.Text,
+  'testCases' : IDL.Vec(TestCase),
+  'title' : IDL.Text,
+  'owner' : IDL.Principal,
+  'bugs' : IDL.Vec(Bug),
+  'cornerCases' : IDL.Vec(CornerCase),
+});
+
+export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addBug' : IDL.Func([IDL.Nat, IDL.Text, Severity], [], []),
+  'addCornerCase' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [], []),
+  'addTestCase' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'deleteBug' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
+  'deleteCornerCase' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
+  'deleteTestCase' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
+  'generateWebsiteTestingData' : IDL.Func([IDL.Text, IDL.Text], [IDL.Nat], []),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'getWebsite' : IDL.Func([IDL.Nat], [IDL.Opt(Website)], ['query']),
+  'getWebsitesByUser' : IDL.Func([], [IDL.Vec(Website)], ['query']),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'updateBug' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Text, Severity], [], []),
+  'updateCornerCase' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Text, IDL.Text], [], []),
+  'updateTestCase' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Text, IDL.Text], [], []),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const Severity = IDL.Variant({
+    'low' : IDL.Null,
+    'high' : IDL.Null,
+    'critical' : IDL.Null,
+    'medium' : IDL.Null,
+  });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
+  const TestCase = IDL.Record({
+    'id' : IDL.Nat,
+    'description' : IDL.Text,
+    'steps' : IDL.Text,
+  });
+  const Bug = IDL.Record({
+    'id' : IDL.Nat,
+    'description' : IDL.Text,
+    'severity' : Severity,
+  });
+  const CornerCase = IDL.Record({
+    'id' : IDL.Nat,
+    'description' : IDL.Text,
+    'scenario' : IDL.Text,
+  });
+  const Website = IDL.Record({
+    'id' : IDL.Nat,
+    'url' : IDL.Text,
+    'testCases' : IDL.Vec(TestCase),
+    'title' : IDL.Text,
+    'owner' : IDL.Principal,
+    'bugs' : IDL.Vec(Bug),
+    'cornerCases' : IDL.Vec(CornerCase),
+  });
+  
+  return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addBug' : IDL.Func([IDL.Nat, IDL.Text, Severity], [], []),
+    'addCornerCase' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [], []),
+    'addTestCase' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'deleteBug' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
+    'deleteCornerCase' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
+    'deleteTestCase' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
+    'generateWebsiteTestingData' : IDL.Func(
+        [IDL.Text, IDL.Text],
+        [IDL.Nat],
+        [],
+      ),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'getWebsite' : IDL.Func([IDL.Nat], [IDL.Opt(Website)], ['query']),
+    'getWebsitesByUser' : IDL.Func([], [IDL.Vec(Website)], ['query']),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'updateBug' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Text, Severity], [], []),
+    'updateCornerCase' : IDL.Func(
+        [IDL.Nat, IDL.Nat, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
+    'updateTestCase' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Text, IDL.Text], [], []),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

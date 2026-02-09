@@ -1,224 +1,76 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 16,
-  "summary": "ICP canister-based QA management app with Motoko backend (authorization/access control) and React + shadcn/ui frontend providing authenticated flows, dashboards, and CRUD pages for bugs, test cases, and test runs.",
+  "projectStateVersion": 3,
+  "summary": "Build a Type 1 Web Application Testing Platform where users paste a website URL to auto-generate test cases, bug lists, and corner cases, with an additional manual editing section to add/modify test cases and results.",
+  "architectural_notes": [],
+  "known_issues": [
+    "Build/implementation attempts are failing with messages like 'AI struggled' / 'couldn't implement that request' / 'build didn’t complete' when generating the platform."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "IF-1",
-      "title": "Motoko backend canister with authorization and access control",
-      "synonyms": [
-        "authorization mixin",
-        "access-control"
-      ],
-      "description": "Backend implemented in Motoko with authorization mixin and access-control module, integrated in main canister.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-2",
-      "title": "Internet Identity authentication integration (frontend AuthGate)",
-      "synonyms": [
-        "II login",
-        "Internet Identity"
-      ],
-      "description": "Frontend authentication flow using Internet Identity with AuthGate and LoginButton, actor initialization hooks, and auth-aware routing.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-3",
-      "title": "App shell layout with side navigation",
-      "synonyms": [
-        "AppShell",
-        "SideNav"
-      ],
-      "description": "Core application layout components and navigation structure for major QA sections.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-4",
-      "title": "User profile setup modal",
-      "synonyms": [
-        "ProfileSetupModal"
-      ],
-      "description": "Modal UI for initial user/profile setup after authentication.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-5",
-      "title": "Dashboard page",
-      "synonyms": [
-        "DashboardPage"
-      ],
-      "description": "Main dashboard page entry point for the QA app.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-6",
-      "title": "Bug tracking pages (list, detail, create/edit)",
-      "synonyms": [
-        "BugListPage",
-        "BugDetailPage",
-        "BugUpsertPage"
-      ],
-      "description": "UI pages to view bugs list, inspect bug details, and create/update bug records with status/severity/priority badges.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-7",
-      "title": "Test case management pages (list, detail, create/edit)",
-      "synonyms": [
-        "TestCaseListPage",
-        "TestCaseDetailPage",
-        "TestCaseUpsertPage"
-      ],
-      "description": "UI pages to manage test cases including list, detail, and create/update flows.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-8",
-      "title": "Test run workflow pages (create, execute, list, summary)",
-      "synonyms": [
-        "TestRunCreatePage",
-        "TestRunExecutePage",
-        "TestRunListPage",
-        "TestRunSummaryPage"
-      ],
-      "description": "UI pages supporting test run creation, execution, listing, and summary review.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-9",
-      "title": "System UI states (loading, error, empty states)",
-      "synonyms": [
-        "LoadingState",
-        "ErrorBanner",
-        "EmptyState"
-      ],
-      "description": "Reusable system components to display loading indicators, error banners, and empty state screens.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-10",
-      "title": "Generated empty-state and branding assets",
-      "synonyms": [
-        "generated images",
-        "empty states images"
-      ],
-      "description": "Bundled generated PNG assets for empty bugs/testcases states and app logo.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-11",
-      "title": "Frontend-to-backend bindings and actor utilities",
-      "synonyms": [
-        "backend.did bindings",
-        "useActor",
-        "backend client"
-      ],
-      "description": "Type declarations and client utilities for calling the backend canister (DID JS/TS bindings, backend.ts, useActor hook).",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-12",
-      "title": "Build/deploy template for ICP + React app",
-      "synonyms": [
-        "build-template",
-        "Dockerfile",
-        "deploy.sh"
-      ],
-      "description": "Included build-template with Dockerfile, ICP canister YAMLs, deploy script, and frontend tooling configuration for reproducible builds/deployments.",
-      "reqIds": [],
-      "version": 1
-    },
-    {
-      "id": "IF-13",
-      "title": "Deployment documentation and published deployment links",
-      "synonyms": [
-        "DEPLOYMENT_LINKS.md",
-        "DEPLOY_MAINNET.md",
-        "deployment artifacts"
-      ],
-      "description": "Added deployment-facing documentation (including a consolidated deployment links file) and tooling to record deployment artifacts for the frontend, supporting shareable hosted app access details.",
-      "reqIds": [
-        "AR-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-complete-a-successful-internet-computer-mainnet-publish-deploy-of-the-existing-qa-management-app-and-produce-a-shareable-public-website-url-for-the-deployed-frontend-canister",
-      "title": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
+      "id": "feature-add-a-new-web-app-testing-generator-flow-where-a-user-can-paste-a-website-url-click-generate-and-receive-a-generated-test-cases-b-a-generated-bug-list-and-c-generated-corner-edge-cases-for-that-target-website",
+      "title": "Add a new \"Web App Testing\" generator flow where a user can paste a website URL, click \"Generate\", and receive (a) generated test cases, (b) a generated bug list, and (c) generated corner/edge cases for that target website.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-resolve-the-publish-time-domain-validation-failure-by-ensuring-the-deployment-publish-flow-uses-a-domain-app-name-that-is-5-50-characters-and-contains-only-letters-numbers-and-hyphens-e-g-normalize-user-provided-names-by-removing-spaces-and-invalid-characters",
-      "title": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens (e.g., normalize user-provided names by removing spaces and invalid characters).",
+      "id": "feature-add-an-auto-manual-workflow-after-generation-allow-users-to-review-and-manually-add-edit-delete-test-cases-and-bugs-within-the-app-ui-starting-from-the-generated-baseline-for-a-given-target-website",
+      "title": "Add an \"Auto + Manual\" workflow: after generation, allow users to review and manually add/edit/delete test cases and bugs within the app UI, starting from the generated baseline for a given target website.",
       "reqIds": [
-        "REQ-2"
+        "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-after-a-successful-mainnet-deploy-update-frontend-deployment-links-md-with-the-latest-frontend-and-backend-canister-ids-and-the-generated-public-website-link-using-the-existing-frontend-scripts-recorddeploymentartifact-js-script-or-an-equivalent-automated-step",
-      "title": "After a successful mainnet deploy, update `frontend/DEPLOYMENT_LINKS.md` with the latest frontend and backend canister IDs and the generated public website link using the existing `frontend/scripts/recordDeploymentArtifact.js` script (or an equivalent automated step).",
+      "id": "feature-integrate-the-generator-into-the-existing-navigation-and-routing-so-users-can-easily-access-it-and-connect-existing-test-cases-bugs-areas-to-the-selected-target-website-context",
+      "title": "Integrate the generator into the existing navigation and routing so users can easily access it, and connect existing Test Cases / Bugs areas to the selected target website context.",
       "reqIds": [
-        "REQ-3"
+        "REQ-5"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-2",
-      "summary": "Publish/deploy the QA testing app publicly on ICP and provide a shareable website link",
+      "id": "AR-1",
+      "summary": "Type 1 Web Application Testing Platform: paste a website link to auto-generate test cases, bug list, corner cases, and functionality coverage",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add 'Auto + Manual' workflow: after generating from URL, allow users to manually add/edit test cases and results",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Provide a clear UI for pasting a website URL and triggering generation (input box + Generate action)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Implement backend data models and persistence for \"target websites\" and their generated artifacts so each user can generate and revisit results for multiple URLs over time.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement deterministic, template-based generation logic that produces a reasonable baseline set of test cases, bug suggestions, and corner cases from a URL, without attempting to crawl or fetch the target website content.",
+      "reqIds": [
+        "REQ-3"
+      ],
       "status": "pending"
     }
   ],
-  "architectural_notes": [
-    "Backend is implemented as an ICP Motoko canister with modular authorization (MixinAuthorization) and access-control logic.",
-    "Frontend uses React + Vite + Tailwind and a large shadcn/ui component set for consistent UI primitives.",
-    "Authentication is handled via Internet Identity; frontend enforces auth gating and initializes authenticated canister actors for API calls.",
-    "Project includes a build-template (Dockerfile + canister.yaml files + deploy script) to standardize build and deployment to ICP.",
-    "Project now includes explicit deployment documentation and an artifact-recording script to capture/persist deployment outputs (e.g., URLs/canister IDs) for end-user access."
-  ],
-  "known_issues": [
-    "Deployment/publish step encountered a domain name validation error: \"Domain QA-testing app by akash must be between 5 and 50 characters and contain only letters, numbers, and hyphens.\""
-  ],
-  "isFixRequest": false,
-  "generatedImages": [
-    {
-      "filename": "frontend/public/assets/generated/empty-bugs.dim_1200x800.png",
-      "description": "Generated empty-state image for bugs section",
-      "targetWidth": 1200,
-      "targetHeight": 800
-    },
-    {
-      "filename": "frontend/public/assets/generated/empty-testcases.dim_1200x800.png",
-      "description": "Generated empty-state image for test cases section",
-      "targetWidth": 1200,
-      "targetHeight": 800
-    },
-    {
-      "filename": "frontend/public/assets/generated/qa-logo.dim_512x512.png",
-      "description": "Generated QA app logo",
-      "targetWidth": 512,
-      "targetHeight": 512
-    }
-  ],
-  "projectName": "Publish QA Management app to IC mainnet and record public link",
+  "gameProjectType": "none",
+  "projectName": "Add URL-based test plan generator with Auto + Manual workflow",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -1,76 +1,106 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "IC mainnet publish flow hardening and deployment link recording (frontend-only)",
+  "title": "URL-based Web App Testing generator with Auto + Manual editing (frontend)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Provide an automated, repeatable mainnet publish/deploy flow that completes successfully and prints a shareable public icp0.io URL for the deployed frontend canister.",
+      "summary": "Create a Web App Testing generator page with URL input, client-side validation, and generated results rendering (test cases, bugs, corner cases) without external AI services.",
       "acceptanceCriteria": [
-        "A successful `dfx deploy --network ic` (or equivalent publish pipeline) run completes without the domain validation error",
-        "A public URL of the form `https://<frontend_canister_id>.icp0.io` is produced and shared as the live app link"
+        "Frontend provides a URL input field and a primary \"Generate\" action.",
+        "URL is validated client-side (must be http/https and a valid hostname); invalid input blocks generation with a clear error message.",
+        "Submitting a valid URL results in visible generated outputs for: test cases, bug list, and corner cases.",
+        "Generation works without using any external AI/LLM services or third-party APIs."
       ],
       "file_operations": [
         {
-          "path": "frontend/scripts/publishMainnetAndRecord.js",
+          "path": "frontend/src/pages/WebAppTestingPage.tsx",
           "operation": "create",
-          "description": "Create a Node.js CLI script that (1) validates/normalizes a provided app/domain name per the publishing constraints, (2) runs the mainnet publish/deploy command, (3) resolves the deployed frontend/backend canister IDs, and (4) outputs the resulting public URL `https://<frontendId>.icp0.io`. Use the github-export-icp-cli template conventions for deployment scripting where applicable; verify the component's usage instructions before implementing."
+          "description": "Add the \"Web App Testing\" generator flow UI: URL input + \"Generate\" action, error messaging for invalid URLs, and results sections for test cases, bugs, and corner cases using backend-provided generation and website retrieval. Compose existing shadcn/ui components (e.g., Button/Input/Card/Tabs/Badge/Dialog/Textarea) to build the screen; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/DEPLOY_MAINNET.md",
-          "operation": "modify",
-          "description": "Update the mainnet deployment runbook to use the new automated publish+record script and document how to obtain/share the resulting `https://<frontendId>.icp0.io` link after a successful deploy. Mention the github-export-icp-cli workflow alignment at a high level; verify the component's usage instructions before implementing."
+          "path": "frontend/src/hooks/useWebAppTesting.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for generator and data loading: list user websites, generate for URL, fetch a selected website, and provide typed helpers around the backend actor calls. Ensure hooks are disabled until the actor is available. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/urlValidation.ts",
+          "operation": "create",
+          "description": "Add a small URL validation/normalization utility for the generator input (http/https required, valid hostname, trimmed input). Used to block generation and show clear English errors for invalid input."
+        },
+        {
+          "path": "frontend/src/components/RequireAuth.tsx",
+          "operation": "create",
+          "description": "Add an authentication gate wrapper that checks Internet Identity state and blocks access to generator data when logged out, showing an English login prompt and a login button. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/LoginButton.tsx",
+          "operation": "create",
+          "description": "Add a reusable Login/Logout button using the existing Internet Identity hook and clearing React Query cache on logout (per selected authorization component guidance). Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-2",
-      "summary": "Prevent publish-time domain/app-name validation failures by normalizing or rejecting invalid names with clear English guidance and an example valid hyphenated name.",
+      "id": "REQ-4",
+      "summary": "Enable Auto + Manual workflow in the results view: edit/add/delete test cases and bugs with persistence, and clearly label generated vs user-modified items.",
       "acceptanceCriteria": [
-        "Publishing no longer fails due to the domain/app name containing spaces or other invalid characters",
-        "If an invalid name is provided, the flow clearly indicates the constraint in English and provides an example of a valid hyphenated name"
+        "From a generated results view, the user can: edit a generated test case, add a new test case, and delete a test case; changes persist to the backend.",
+        "From a generated results view, the user can: edit a generated bug suggestion, add a new bug, and delete a bug; changes persist to the backend.",
+        "Manual edits do not get overwritten when the user revisits the same target website’s results.",
+        "UI clearly distinguishes generated items vs user-edited/user-created items (e.g., label or badge)."
       ],
       "file_operations": [
         {
-          "path": "frontend/scripts/domainName.js",
-          "operation": "create",
-          "description": "Add a small shared helper module that normalizes and validates a user-provided domain/app name to the required format (5–50 chars; only letters, numbers, hyphens). Include logic to (a) strip/replace invalid characters (e.g., spaces -> hyphens) and (b) fail fast with a clear error message and a concrete valid example if it cannot produce a compliant name."
+          "path": "frontend/src/pages/WebAppTestingPage.tsx",
+          "operation": "modify",
+          "description": "Extend results UI to support manual add/edit/delete for test cases and bugs (and allow add/edit/delete for corner cases where supported by backend). Use modal/dialog or inline editor patterns composed from existing shadcn/ui components, show success/error toasts, and display badges/labels to distinguish generated vs user-modified/user-created items (based on local UI state such as \"edited\"/\"created\" tracked per item for the current session and/or via backend-returned fields if present). Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/scripts/publishMainnetAndRecord.js",
+          "path": "frontend/src/hooks/useWebAppTesting.ts",
           "operation": "modify",
-          "description": "Integrate the domain/app-name helper so the publish flow always uses a compliant name and surfaces a clear, English constraint message (with example) before attempting the mainnet publish/deploy when the provided value is invalid."
-        },
-        {
-          "path": "frontend/DEPLOY_MAINNET.md",
-          "operation": "modify",
-          "description": "Document the domain/app-name constraints (5–50 chars; letters/numbers/hyphens) and describe how the publish script normalizes input and/or fails with an actionable message and a valid hyphenated example."
+          "description": "Add React Query mutations for add/update/delete operations for test cases, bugs, and corner cases (using the backend actor methods), and invalidate/refetch the selected website + website list queries after mutations to ensure persistence is reflected on revisit."
         }
       ]
     },
     {
-      "id": "REQ-3",
-      "summary": "Automatically record mainnet deployment artifacts by updating frontend/DEPLOYMENT_LINKS.md with the latest canister IDs and the derived public website link.",
+      "id": "REQ-5",
+      "summary": "Wire generator into routing/navigation and scope existing Bugs/Test Cases views to the selected target website context with history selection.",
       "acceptanceCriteria": [
-        "`frontend/DEPLOYMENT_LINKS.md` contains a non-empty `Live Application URL` entry",
-        "`frontend/DEPLOYMENT_LINKS.md` contains non-empty frontend and backend canister IDs",
-        "The recorded public URL matches the frontend canister ID in the same file (i.e., `https://<frontendId>.icp0.io`)"
+        "A new navigation entry exists (e.g., \"Web App Testing\" or \"Generator\") that routes to the generator page.",
+        "Generator page includes a way to see/select previously created target websites (history list) and open their generated results.",
+        "When a target website is selected, the UI shows test cases, bug list, and corner cases for that target website.",
+        "User-facing text across the generator pages is in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/scripts/recordDeploymentArtifact.js",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Enhance the recorder script to support an automated mode that can resolve the latest mainnet frontend/backend canister IDs when not explicitly provided (while preserving current CLI/env usage). Ensure it always writes `frontend/DEPLOYMENT_LINKS.md` with non-empty IDs and a `Live Application URL` that matches `https://<frontendId>.icp0.io`."
+          "description": "Register a new route for the Web App Testing generator page and wrap it (and other data-backed pages as needed) with the RequireAuth gate to ensure users must be logged in before accessing persisted testing data."
         },
         {
-          "path": "frontend/DEPLOYMENT_LINKS.md",
+          "path": "frontend/src/components/AppShell.tsx",
           "operation": "modify",
-          "description": "Adjust the placeholder content (if any) to clearly indicate it is generated/overwritten by `frontend/scripts/recordDeploymentArtifact.js`, and ensure the file remains a stable target for the automated recorder output (no manual-only format expectations)."
+          "description": "Add a new navigation entry (\"Web App Testing\" or \"Generator\") pointing to the new generator route, using existing shadcn/ui Button/Sheet patterns already in this file. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/DEPLOY_MAINNET.md",
+          "path": "frontend/src/pages/WebAppTestingPage.tsx",
           "operation": "modify",
-          "description": "Update the runbook to require running `frontend/scripts/recordDeploymentArtifact.js` (or the combined publish+record script) immediately after successful mainnet deploy, and describe where to find the updated `Live Application URL` and canister IDs in `frontend/DEPLOYMENT_LINKS.md`."
+          "description": "Add a history list UI (previously generated websites) with selection that loads the chosen website’s artifacts into the page, and provide actions to navigate to the existing Bugs and Test Cases sections in the context of the selected website (e.g., via query string like websiteId=... or shared selection state). Ensure all user-facing text is English. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/websiteSelection.ts",
+          "operation": "create",
+          "description": "Add a tiny selection-state helper (e.g., read/write selected website id via URL search params and/or localStorage) so the generator, Bugs, and Test Cases pages can share the current target website context without adding new top-level pages."
+        },
+        {
+          "path": "frontend/src/pages/BugListPage.tsx",
+          "operation": "modify",
+          "description": "Replace mock bug list with website-scoped bugs loaded from the selected website context (from URL/local selection). If no website is selected, show an English empty/prompt state that links to the Web App Testing generator. Use existing shadcn/ui Card/Badge components for rendering; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/TestCaseListPage.tsx",
+          "operation": "modify",
+          "description": "Replace mock test case list with website-scoped test cases loaded from the selected website context (from URL/local selection). If no website is selected, show an English empty/prompt state that links to the Web App Testing generator. Use existing shadcn/ui Card/Badge components for rendering; verify the component's usage instructions before implementing."
         }
       ]
     }

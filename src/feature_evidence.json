@@ -2,18 +2,21 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-complete-a-successful-internet-computer-mainnet-publish-deploy-of-the-existing-qa-management-app-and-produce-a-shareable-public-website-url-for-the-deployed-frontend-canister",
-      "featureTitle": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
+      "featureId": "feature-add-a-new-web-app-testing-generator-flow-where-a-user-can-paste-a-website-url-click-generate-and-receive-a-generated-test-cases-b-a-generated-bug-list-and-c-generated-corner-edge-cases-for-that-target-website",
+      "featureTitle": "Add a new \"Web App Testing\" generator flow where a user can paste a website URL, click \"Generate\", and receive (a) generated test cases, (b) a generated bug list, and (c) generated corner/edge cases for that target website.",
       "files": [
-        "frontend/DEPLOY_MAINNET.md",
-        "frontend/scripts/publishMainnetAndRecord.js"
+        "frontend/src/components/LoginButton.tsx",
+        "frontend/src/components/RequireAuth.tsx",
+        "frontend/src/lib/urlValidation.ts",
+        "frontend/src/pages/WebAppTestingPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
         "REQ-1"
@@ -21,42 +24,45 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-resolve-the-publish-time-domain-validation-failure-by-ensuring-the-deployment-publish-flow-uses-a-domain-app-name-that-is-5-50-characters-and-contains-only-letters-numbers-and-hyphens-e-g-normalize-user-provided-names-by-removing-spaces-and-invalid-characters",
-      "featureTitle": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens (e.g., normalize user-provided names by removing spaces and invalid characters).",
+      "featureId": "feature-add-an-auto-manual-workflow-after-generation-allow-users-to-review-and-manually-add-edit-delete-test-cases-and-bugs-within-the-app-ui-starting-from-the-generated-baseline-for-a-given-target-website",
+      "featureTitle": "Add an \"Auto + Manual\" workflow: after generation, allow users to review and manually add/edit/delete test cases and bugs within the app UI, starting from the generated baseline for a given target website.",
       "files": [
-        "frontend/DEPLOY_MAINNET.md",
-        "frontend/scripts/domainName.js",
-        "frontend/scripts/publishMainnetAndRecord.js"
+        "frontend/src/pages/WebAppTestingPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-4"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-after-a-successful-mainnet-deploy-update-frontend-deployment-links-md-with-the-latest-frontend-and-backend-canister-ids-and-the-generated-public-website-link-using-the-existing-frontend-scripts-recorddeploymentartifact-js-script-or-an-equivalent-automated-step",
-      "featureTitle": "After a successful mainnet deploy, update `frontend/DEPLOYMENT_LINKS.md` with the latest frontend and backend canister IDs and the generated public website link using the existing `frontend/scripts/recordDeploymentArtifact.js` script (or an equivalent automated step).",
+      "featureId": "feature-integrate-the-generator-into-the-existing-navigation-and-routing-so-users-can-easily-access-it-and-connect-existing-test-cases-bugs-areas-to-the-selected-target-website-context",
+      "featureTitle": "Integrate the generator into the existing navigation and routing so users can easily access it, and connect existing Test Cases / Bugs areas to the selected target website context.",
       "files": [
-        "frontend/DEPLOYMENT_LINKS.md",
-        "frontend/DEPLOY_MAINNET.md",
-        "frontend/scripts/recordDeploymentArtifact.js"
+        "frontend/src/App.tsx",
+        "frontend/src/components/AppShell.tsx",
+        "frontend/src/lib/websiteSelection.ts",
+        "frontend/src/pages/BugListPage.tsx",
+        "frontend/src/pages/TestCaseListPage.tsx",
+        "frontend/src/pages/WebAppTestingPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-3"
+        "REQ-5"
       ],
       "confidence": "high"
     }

@@ -1,4 +1,4 @@
-import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet, useNavigate } from '@tanstack/react-router';
+import { createRouter, createRoute, createRootRoute, RouterProvider, Outlet } from '@tanstack/react-router';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
 import { AppShell } from './components/AppShell';
@@ -13,6 +13,8 @@ import { TestRunListPage } from './pages/TestRunListPage';
 import { TestRunCreatePage } from './pages/TestRunCreatePage';
 import { TestRunExecutePage } from './pages/TestRunExecutePage';
 import { TestRunSummaryPage } from './pages/TestRunSummaryPage';
+import { WebAppTestingPage } from './pages/WebAppTestingPage';
+import { RequireAuth } from './components/RequireAuth';
 
 // Root route with layout
 const rootRoute = createRootRoute({
@@ -33,11 +35,26 @@ const indexRoute = createRoute({
   component: DashboardPage,
 });
 
+// Web App Testing Generator
+const webAppTestingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/web-app-testing',
+  component: () => (
+    <RequireAuth>
+      <WebAppTestingPage />
+    </RequireAuth>
+  ),
+});
+
 // Bug routes
 const bugsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/bugs',
-  component: BugListPage,
+  component: () => (
+    <RequireAuth>
+      <BugListPage />
+    </RequireAuth>
+  ),
 });
 
 const bugDetailRoute = createRoute({
@@ -62,7 +79,11 @@ const bugEditRoute = createRoute({
 const testCasesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/test-cases',
-  component: TestCaseListPage,
+  component: () => (
+    <RequireAuth>
+      <TestCaseListPage />
+    </RequireAuth>
+  ),
 });
 
 const testCaseDetailRoute = createRoute({
@@ -110,6 +131,7 @@ const testRunSummaryRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  webAppTestingRoute,
   bugsRoute,
   bugDetailRoute,
   bugCreateRoute,

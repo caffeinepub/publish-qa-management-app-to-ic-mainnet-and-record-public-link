@@ -1,61 +1,88 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-04T09:38:19.006Z",
-  "summary": "Diff adds domain/app-name validation + an automated mainnet publish/record script, and enhances the deployment artifact recorder. However, the diff does not provide evidence of an actual completed IC mainnet deploy, a recorded non-empty live URL/IDs in DEPLOYMENT_LINKS.md, or that the validated app/domain name is actually used to prevent the publish-time domain validation failure. Additionally, many frontend pages/styles appear modified beyond the deploy/link-recording scope.",
+  "generatedAt": "2026-02-09T06:55:14.080Z",
+  "summary": "Diff adds a new Web App Testing page with URL validation, routing/nav integration, and React Query hooks for generating and CRUD’ing website-scoped test artifacts. Backend adds initial Website/TestCase/Bug/CornerCase models and a generateWebsiteTestingData method, but generation is far below required volume and backend persistence fields/methods required by the spec are not evidenced in the truncated diff.",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
-      "reason": "The diff only adds scripts/runbooks; it does not show evidence of an actual mainnet deployment having been completed or a concrete frontend canister URL being produced/shared as an artifact in-repo.",
-      "evidence": [
-        "frontend/scripts/publishMainnetAndRecord.js",
-        "frontend/DEPLOYMENT_LINKS.md"
-      ]
-    },
-    {
       "id": "REQ-2",
-      "requirement": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens.",
-      "reason": "A validator/normalizer is added, but the publish script (as shown) runs `dfx deploy --network ic` without showing any step that applies the normalized app/domain name to the actual publish/deploy configuration (e.g., passing it into the publish pipeline or updating relevant config). Therefore it’s not evidenced that the domain validation failure is actually prevented.",
+      "requirement": "Backend target website entries must include (at minimum) id, url, createdAt, updatedAt; expose create/list/get methods; store generated artifacts per website; scope all data to calling principal; allow reload after refresh.",
+      "reason": "Backend Website type shown includes id/owner/url/title and arrays but does not include createdAt/updatedAt. The required create/list/get methods and persistence behavior across refresh cannot be confirmed from the provided truncated backend diff (hooks call getWebsitesByUser/getWebsite, but their backend implementations are not shown).",
       "evidence": [
-        "frontend/scripts/domainName.js",
-        "frontend/scripts/publishMainnetAndRecord.js"
+        "backend/main.mo (Website type lacks createdAt/updatedAt; only generateWebsiteTestingData shown)",
+        "frontend/src/hooks/useQueries.ts (calls getWebsitesByUser/getWebsite but backend methods not evidenced)"
       ]
     },
     {
       "id": "REQ-3",
-      "requirement": "After a successful mainnet deploy, update frontend/DEPLOYMENT_LINKS.md with the latest frontend and backend canister IDs and the generated public website link using the existing recordDeploymentArtifact.js script (or an equivalent automated step).",
-      "reason": "DEPLOYMENT_LINKS.md in the diff still contains a placeholder 'Not yet deployed' section, not non-empty canister IDs and a live URL matching `https://<frontendId>.icp0.io`. The recorder script is enhanced, but the required updated artifact content is not present in the diff.",
+      "requirement": "Deterministic, template-based generation must produce 20+ test cases, 10+ bug suggestions, and 10+ corner cases with clear English titles and step-by-step content; stable for same URL.",
+      "reason": "Backend generation functions shown return only 2 items each (testCases/bugs/cornerCases), far below required minimum counts. Test cases are minimal and only partially step-by-step; bugs/corner cases are brief. Also IDs appear to be computed (nextTestCaseId + 1 etc.) without evidence of incrementing the counters per item, which risks duplicate IDs across generations.",
       "evidence": [
-        "frontend/DEPLOYMENT_LINKS.md",
-        "frontend/scripts/recordDeploymentArtifact.js"
+        "backend/main.mo (generateTestCases/generateBugs/generateCornerCases each returns 2 items; ID counters not incremented within generation)"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "UI must clearly distinguish generated items vs user-edited/user-created items; manual edits must not be overwritten when revisiting the same target website.",
+      "reason": "Diff shows editing/CRUD hooks and UI elements (badges/dialog) but provides no clear evidence of any persisted flag/metadata (e.g., generated vs user-edited) in backend types, nor evidence of UI labeling logic. Backend types shown (TestCase/Bug/CornerCase) do not include fields to distinguish generated vs user-created/edited.",
+      "evidence": [
+        "backend/main.mo (TestCase/Bug/CornerCase types only have id/description/steps|severity|scenario)",
+        "frontend/src/pages/WebAppTestingPage.tsx (uses Badge and edit dialogs, but truncation provides no evidence of generated-vs-manual distinction)"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "Submitting a valid URL results in visible generated outputs for: test cases, bug list, and corner cases.",
+      "reason": "The WebAppTestingPage implementation is truncated before showing the results rendering; while hooks for loading website data exist, the diff excerpt does not conclusively show that all three outputs are displayed after generation.",
+      "evidence": [
+        "frontend/src/pages/WebAppTestingPage.tsx (truncated before results UI)"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Large set of frontend UI/page/style changes (dashboard/bugs/test cases/test runs pages, app shell, router, Tailwind/theme) not directly required for enabling mainnet publish and recording the deployment link.",
-      "reason": "BuildRequest non-goals explicitly avoid adding new product features beyond enabling successful publish/link recording; the diff summary indicates many application pages and UI infrastructure were modified.",
+      "description": "Introduced explicit authentication gating (RequireAuth wrapper) and Login/Logout UI around multiple routes, plus actor initialization that injects an admin token from URL parameters.",
+      "reason": "The BuildRequest did not request adding new auth UI/route guards or admin-token-based access-control initialization; it only constrained auth providers (Internet Identity only).",
       "evidence": [
-        "frontend-file-summaries.txt"
+        "frontend/src/components/RequireAuth.tsx",
+        "frontend/src/components/LoginButton.tsx",
+        "frontend/src/App.tsx (routes wrapped with RequireAuth)",
+        "frontend/src/hooks/useActor.ts (admin token via getSecretParameter + _initializeAccessControlWithSecret)",
+        "frontend/src/utils/urlParams.ts"
       ]
     },
     {
-      "description": "Addition of a new deployment runbook document (DEPLOY_MAINNET.md).",
-      "reason": "Not explicitly requested; only automated recording via recordDeploymentArtifact.js (or equivalent automated step) was required. Documentation may be helpful but is extra relative to stated requirements.",
+      "description": "Added deployment documentation/artifact recording and mainnet deploy runbooks.",
+      "reason": "Not requested by any REQ; unrelated to URL-based generator and Auto+Manual workflow.",
       "evidence": [
-        "frontend/DEPLOY_MAINNET.md"
+        "frontend-file-summaries.txt (frontend/DEPLOY_MAINNET.md, frontend/DEPLOYMENT_LINKS.md, frontend/scripts/recordDeploymentArtifact.js)"
+      ]
+    },
+    {
+      "description": "Modified AppShell footer branding/linking to caffeine.ai.",
+      "reason": "Not requested by the BuildRequest requirements.",
+      "evidence": [
+        "frontend/src/components/AppShell.tsx"
       ]
     }
   ],
-  "confidence": 0.66,
+  "confidence": 0.74,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/DEPLOYMENT_LINKS.md",
-    "frontend/DEPLOY_MAINNET.md",
-    "frontend/scripts/domainName.js",
-    "frontend/scripts/publishMainnetAndRecord.js",
-    "frontend/scripts/recordDeploymentArtifact.js",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AppShell.tsx",
+    "frontend/src/components/LoginButton.tsx",
+    "frontend/src/components/RequireAuth.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/lib/urlValidation.ts",
+    "frontend/src/lib/websiteSelection.ts",
+    "frontend/src/pages/BugListPage.tsx",
+    "frontend/src/pages/TestCaseListPage.tsx",
+    "frontend/src/pages/WebAppTestingPage.tsx",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

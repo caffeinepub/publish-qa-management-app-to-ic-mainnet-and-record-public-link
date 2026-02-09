@@ -1,8 +1,9 @@
 import { type ReactNode } from 'react';
-import { Bug, TestTube, PlayCircle, LayoutDashboard, Menu } from 'lucide-react';
+import { Bug, TestTube, PlayCircle, LayoutDashboard, Menu, Sparkles } from 'lucide-react';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { LoginButton } from './LoginButton';
 import { cn } from '@/lib/utils';
 
 interface AppShellProps {
@@ -11,6 +12,7 @@ interface AppShellProps {
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Web App Testing', href: '/web-app-testing', icon: Sparkles },
   { name: 'Bugs', href: '/bugs', icon: Bug },
   { name: 'Test Cases', href: '/test-cases', icon: TestTube },
   { name: 'Test Runs', href: '/test-runs', icon: PlayCircle },
@@ -76,6 +78,10 @@ export function AppShell({ children }: AppShellProps) {
           <nav className="ml-8 hidden gap-1 md:flex">
             <NavItems />
           </nav>
+
+          <div className="ml-auto">
+            <LoginButton />
+          </div>
         </div>
       </header>
 

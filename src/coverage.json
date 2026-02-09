@@ -1,70 +1,108 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-04T09:38:19.045Z",
+  "generatedAt": "2026-02-09T06:55:14.083Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
+    "total": 5,
     "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
+        "summary": "Add a new \"Web App Testing\" generator flow where a user can paste a website URL, click \"Generate\", and receive (a) generated test cases, (b) a generated bug list, and (c) generated corner/edge cases for that target website.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/scripts/publishMainnetAndRecord.js",
-          "frontend/DEPLOY_MAINNET.md"
+          "frontend/src/pages/WebAppTestingPage.tsx",
+          "frontend/src/hooks/useWebAppTesting.ts",
+          "frontend/src/lib/urlValidation.ts",
+          "frontend/src/components/RequireAuth.tsx",
+          "frontend/src/components/LoginButton.tsx"
         ],
         "matchedFiles": [
-          "frontend/scripts/publishMainnetAndRecord.js",
-          "frontend/DEPLOY_MAINNET.md"
+          "frontend/src/pages/WebAppTestingPage.tsx",
+          "frontend/src/lib/urlValidation.ts",
+          "frontend/src/components/RequireAuth.tsx",
+          "frontend/src/components/LoginButton.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens (e.g., normalize user-provided names by removing spaces and invalid characters).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/scripts/domainName.js",
-          "frontend/scripts/publishMainnetAndRecord.js",
-          "frontend/DEPLOY_MAINNET.md"
-        ],
-        "matchedFiles": [
-          "frontend/scripts/domainName.js",
-          "frontend/scripts/publishMainnetAndRecord.js",
-          "frontend/DEPLOY_MAINNET.md"
-        ]
+        "summary": "Implement backend data models and persistence for \"target websites\" and their generated artifacts so each user can generate and revisit results for multiple URLs over time.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-3",
-        "summary": "After a successful mainnet deploy, update `frontend/DEPLOYMENT_LINKS.md` with the latest frontend and backend canister IDs and the generated public website link using the existing `frontend/scripts/recordDeploymentArtifact.js` script (or an equivalent automated step).",
+        "summary": "Implement deterministic, template-based generation logic that produces a reasonable baseline set of test cases, bug suggestions, and corner cases from a URL, without attempting to crawl or fetch the target website content.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Add an \"Auto + Manual\" workflow: after generation, allow users to review and manually add/edit/delete test cases and bugs within the app UI, starting from the generated baseline for a given target website.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/scripts/recordDeploymentArtifact.js",
-          "frontend/DEPLOYMENT_LINKS.md",
-          "frontend/DEPLOY_MAINNET.md"
+          "frontend/src/pages/WebAppTestingPage.tsx",
+          "frontend/src/hooks/useWebAppTesting.ts"
         ],
         "matchedFiles": [
-          "frontend/scripts/recordDeploymentArtifact.js",
-          "frontend/DEPLOYMENT_LINKS.md",
-          "frontend/DEPLOY_MAINNET.md"
+          "frontend/src/pages/WebAppTestingPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Integrate the generator into the existing navigation and routing so users can easily access it, and connect existing Test Cases / Bugs areas to the selected target website context.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppShell.tsx",
+          "frontend/src/pages/WebAppTestingPage.tsx",
+          "frontend/src/lib/websiteSelection.ts",
+          "frontend/src/pages/BugListPage.tsx",
+          "frontend/src/pages/TestCaseListPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppShell.tsx",
+          "frontend/src/pages/WebAppTestingPage.tsx",
+          "frontend/src/lib/websiteSelection.ts",
+          "frontend/src/pages/BugListPage.tsx",
+          "frontend/src/pages/TestCaseListPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/DEPLOYMENT_LINKS.md",
-    "frontend/DEPLOY_MAINNET.md",
-    "frontend/scripts/domainName.js",
-    "frontend/scripts/publishMainnetAndRecord.js",
-    "frontend/scripts/recordDeploymentArtifact.js",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AppShell.tsx",
+    "frontend/src/components/LoginButton.tsx",
+    "frontend/src/components/RequireAuth.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/lib/urlValidation.ts",
+    "frontend/src/lib/websiteSelection.ts",
+    "frontend/src/pages/BugListPage.tsx",
+    "frontend/src/pages/TestCaseListPage.tsx",
+    "frontend/src/pages/WebAppTestingPage.tsx",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

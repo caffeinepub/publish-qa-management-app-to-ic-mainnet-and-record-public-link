@@ -10,7 +10,59 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface _SERVICE {}
+export interface Bug {
+  'id' : bigint,
+  'description' : string,
+  'severity' : Severity,
+}
+export interface CornerCase {
+  'id' : bigint,
+  'description' : string,
+  'scenario' : string,
+}
+export type Severity = { 'low' : null } |
+  { 'high' : null } |
+  { 'critical' : null } |
+  { 'medium' : null };
+export interface TestCase {
+  'id' : bigint,
+  'description' : string,
+  'steps' : string,
+}
+export interface UserProfile { 'name' : string }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
+export interface Website {
+  'id' : bigint,
+  'url' : string,
+  'testCases' : Array<TestCase>,
+  'title' : string,
+  'owner' : Principal,
+  'bugs' : Array<Bug>,
+  'cornerCases' : Array<CornerCase>,
+}
+export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addBug' : ActorMethod<[bigint, string, Severity], undefined>,
+  'addCornerCase' : ActorMethod<[bigint, string, string], undefined>,
+  'addTestCase' : ActorMethod<[bigint, string, string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'deleteBug' : ActorMethod<[bigint, bigint], undefined>,
+  'deleteCornerCase' : ActorMethod<[bigint, bigint], undefined>,
+  'deleteTestCase' : ActorMethod<[bigint, bigint], undefined>,
+  'generateWebsiteTestingData' : ActorMethod<[string, string], bigint>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getWebsite' : ActorMethod<[bigint], [] | [Website]>,
+  'getWebsitesByUser' : ActorMethod<[], Array<Website>>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'updateBug' : ActorMethod<[bigint, bigint, string, Severity], undefined>,
+  'updateCornerCase' : ActorMethod<[bigint, bigint, string, string], undefined>,
+  'updateTestCase' : ActorMethod<[bigint, bigint, string, string], undefined>,
+}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;

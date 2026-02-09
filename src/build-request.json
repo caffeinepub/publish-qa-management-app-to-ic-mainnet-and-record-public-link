@@ -1,74 +1,143 @@
 {
   "kind": "build_request",
-  "title": "Publish QA Management app to IC mainnet and record public link",
+  "title": "Add URL-based test plan generator with Auto + Manual workflow",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Complete a successful Internet Computer mainnet publish/deploy of the existing QA Management app and produce a shareable public website URL for the deployed frontend canister.",
-      "target": "unknown",
+      "text": "Add a new \"Web App Testing\" generator flow where a user can paste a website URL, click \"Generate\", and receive (a) generated test cases, (b) a generated bug list, and (c) generated corner/edge cases for that target website.",
+      "target": "both",
       "source": {
         "messageIds": [
+          "msg-1",
+          "msg-2",
+          "msg-3",
           "msg-4",
-          "msg-5"
+          "msg-5",
+          "msg-6"
         ],
         "quotes": [
-          "publish",
-          "Domain QA-testing app by akash must be between 5 and 50 characters and contain only letters, numbers, and hyphens."
+          "copy the website link and paste into it and i need test case, bug list ,corner cases all functionalities",
+          "type 1",
+          "i need to to test my project in this new website .. how will i paste the link",
+          "\"Auto + Manual\" (paste link → get results + you can add your own)",
+          "yes please generate"
         ]
       },
       "acceptanceCriteria": [
-        "A successful `dfx deploy --network ic` (or equivalent publish pipeline) run completes without the domain validation error",
-        "A public URL of the form `https://<frontend_canister_id>.icp0.io` is produced and shared as the live app link"
+        "Frontend provides a URL input field and a primary \"Generate\" action.",
+        "URL is validated client-side (must be http/https and a valid hostname); invalid input blocks generation with a clear error message.",
+        "Submitting a valid URL results in visible generated outputs for: test cases, bug list, and corner cases.",
+        "Generation works without using any external AI/LLM services or third-party APIs."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Resolve the publish-time domain validation failure by ensuring the deployment/publish flow uses a domain/app name that is 5–50 characters and contains only letters, numbers, and hyphens (e.g., normalize user-provided names by removing spaces and invalid characters).",
-      "target": "unknown",
+      "text": "Implement backend data models and persistence for \"target websites\" and their generated artifacts so each user can generate and revisit results for multiple URLs over time.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3",
+          "msg-6"
         ],
         "quotes": [
-          "Domain QA-testing app by akash must be between 5 and 50 characters and contain only letters, numbers, and hyphens."
+          "copy the website link and paste into it and i need test case, bug list ,corner cases all functionalities",
+          "yes please generate"
         ]
       },
       "acceptanceCriteria": [
-        "Publishing no longer fails due to the domain/app name containing spaces or other invalid characters",
-        "If an invalid name is provided, the flow clearly indicates the constraint in English and provides an example of a valid hyphenated name"
+        "Backend exposes methods to create/list/get target website entries (at minimum: id, url, createdAt, updatedAt).",
+        "Backend stores generated test cases, generated bug suggestions, and generated corner cases associated to a target website id.",
+        "All stored data is scoped to the calling principal (one user cannot read/modify another user’s targets and artifacts).",
+        "After a page refresh, previously generated targets and artifacts can be reloaded from the backend."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "After a successful mainnet deploy, update `frontend/DEPLOYMENT_LINKS.md` with the latest frontend and backend canister IDs and the generated public website link using the existing `frontend/scripts/recordDeploymentArtifact.js` script (or an equivalent automated step).",
-      "target": "frontend",
+      "text": "Implement deterministic, template-based generation logic that produces a reasonable baseline set of test cases, bug suggestions, and corner cases from a URL, without attempting to crawl or fetch the target website content.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4",
+          "msg-3",
           "msg-5"
         ],
         "quotes": [
-          "publish"
+          "copy the website link and paste into it and i need test case, bug list ,corner cases all functionalities",
+          "\"Auto + Manual\" (paste link → get results + you can add your own)"
         ]
       },
       "acceptanceCriteria": [
-        "`frontend/DEPLOYMENT_LINKS.md` contains a non-empty `Live Application URL` entry",
-        "`frontend/DEPLOYMENT_LINKS.md` contains non-empty frontend and backend canister IDs",
-        "The recorded public URL matches the frontend canister ID in the same file (i.e., `https://<frontendId>.icp0.io`)"
+        "Backend generation creates at least: 20+ test cases, 10+ bug suggestions, and 10+ corner cases for a new URL.",
+        "Generated items include clear English titles and step-by-step content (where applicable), not just single-line bullets.",
+        "Generated items include a mix of functional areas commonly applicable to web apps (e.g., navigation, forms, auth patterns, error states, accessibility, responsiveness, performance/smoke checks) while remaining generic (no claims about site-specific features).",
+        "Generation output is stable for the same URL (same input URL yields the same output unless a version/seed is explicitly changed)."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add an \"Auto + Manual\" workflow: after generation, allow users to review and manually add/edit/delete test cases and bugs within the app UI, starting from the generated baseline for a given target website.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "\"Auto + Manual\" (paste link → get results + you can add your own)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "From a generated results view, the user can: edit a generated test case, add a new test case, and delete a test case; changes persist to the backend.",
+        "From a generated results view, the user can: edit a generated bug suggestion, add a new bug, and delete a bug; changes persist to the backend.",
+        "Manual edits do not get overwritten when the user revisits the same target website’s results.",
+        "UI clearly distinguishes generated items vs user-edited/user-created items (e.g., label or badge)."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Integrate the generator into the existing navigation and routing so users can easily access it, and connect existing Test Cases / Bugs areas to the selected target website context.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6",
+          "msg-7"
+        ],
+        "quotes": [
+          "i need to to test my project in this new website .. how will i paste the link",
+          "yes please generate"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A new navigation entry exists (e.g., \"Web App Testing\" or \"Generator\") that routes to the generator page.",
+        "Generator page includes a way to see/select previously created target websites (history list) and open their generated results.",
+        "When a target website is selected, the UI shows test cases, bug list, and corner cases for that target website.",
+        "User-facing text across the generator pages is in English."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under `frontend/src/components/ui` (read-only shadcn/ui sources).",
-    "Do not modify immutable frontend hook paths: `frontend/src/hooks/useInternetIdentity.ts`, `frontend/src/hooks/useInternetIdentity.tsx`, `frontend/src/hooks/useActor.ts`, `frontend/src/main.tsx`."
+    "Backend must remain a single Motoko actor in backend/main.mo (no multi-canister or microservices architecture).",
+    "Do not edit files under frontend/src/components/ui (compose existing shadcn components instead).",
+    "Do not modify frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and frontend/src/components/ui.",
+    "Do not use external databases or third-party AI/LLM APIs; generation must be implemented within the app (deterministic/template-based)."
   ],
   "nonGoals": [
-    "Adding new product features (bugs/test cases/test runs) beyond enabling a successful publish and link recording",
-    "Changing authentication approach (Internet Identity remains the only supported auth)"
+    "Crawling, scraping, or fetching the target website’s HTML to infer real features.",
+    "Automated dynamic testing of the pasted URL (no browser automation, no Playwright/Selenium integration).",
+    "Real-time collaboration, chat, or WebSocket-driven updates.",
+    "Third-party authentication providers (only Internet Identity is allowed)."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

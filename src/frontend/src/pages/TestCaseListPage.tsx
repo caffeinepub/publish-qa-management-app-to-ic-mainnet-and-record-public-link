@@ -1,31 +1,62 @@
 import { SectionPage } from '@/components/SectionPage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Plus, TestTube } from 'lucide-react';
+import { Plus, TestTube, AlertCircle } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
+import { useGetWebsite } from '@/hooks/useQueries';
+import { getSelectedWebsiteId } from '@/lib/websiteSelection';
 
 export function TestCaseListPage() {
   const navigate = useNavigate();
+  const selectedWebsiteId = getSelectedWebsiteId();
+  const { data: selectedWebsite, isLoading } = useGetWebsite(selectedWebsiteId);
 
-  // Mock data - replace with actual backend data
-  const testCases = [
-    { id: '1', title: 'User Login Flow', category: 'Authentication', priority: 'high', status: 'active' },
-    { id: '2', title: 'Checkout Process', category: 'E-commerce', priority: 'high', status: 'active' },
-    { id: '3', title: 'Profile Update', category: 'User Management', priority: 'medium', status: 'active' },
-  ];
+  if (!selectedWebsiteId || !selectedWebsite) {
+    return (
+      <SectionPage
+        title="Test Cases"
+        description="Manage your test case library"
+      >
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <AlertCircle className="mb-4 h-16 w-16 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">No Website Selected</h3>
+            <p className="mb-4 text-center text-sm text-muted-foreground">
+              Please generate test data for a website first to view test cases
+            </p>
+            <Button onClick={() => navigate({ to: '/web-app-testing' })}>
+              <Plus className="mr-2 h-4 w-4" />
+              Go to Web App Testing
+            </Button>
+          </CardContent>
+        </Card>
+      </SectionPage>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <SectionPage
+        title="Test Cases"
+        description="Manage your test case library"
+      >
+        <div className="flex items-center justify-center py-16">
+          <div className="text-center">
+            <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
+            <p className="text-sm text-muted-foreground">Loading test cases...</p>
+          </div>
+        </div>
+      </SectionPage>
+    );
+  }
+
+  const testCases = selectedWebsite.testCases;
 
   if (testCases.length === 0) {
     return (
       <SectionPage
         title="Test Cases"
-        description="Manage your test case library"
-        actions={
-          <Button onClick={() => navigate({ to: '/test-cases/new' })}>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Test Case
-          </Button>
-        }
+        description={`Test cases for ${selectedWebsite.title}`}
       >
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-16">
@@ -35,10 +66,11 @@ export function TestCaseListPage() {
               className="mb-6 h-48 w-auto opacity-50"
             />
             <h3 className="mb-2 text-lg font-semibold">No test cases yet</h3>
-            <p className="mb-4 text-sm text-muted-foreground">Create your first test case to get started</p>
-            <Button onClick={() => navigate({ to: '/test-cases/new' })}>
-              <Plus className="mr-2 h-4 w-4" />
-              Create Test Case
+            <p className="mb-4 text-sm text-muted-foreground">
+              Add test cases from the Web App Testing page
+            </p>
+            <Button onClick={() => navigate({ to: '/web-app-testing' })}>
+              Go to Web App Testing
             </Button>
           </CardContent>
         </Card>
@@ -49,31 +81,19 @@ export function TestCaseListPage() {
   return (
     <SectionPage
       title="Test Cases"
-      description="Manage your test case library"
-      actions={
-        <Button onClick={() => navigate({ to: '/test-cases/new' })}>
-          <Plus className="mr-2 h-4 w-4" />
-          Create Test Case
-        </Button>
-      }
+      description={`Test cases for ${selectedWebsite.title}`}
     >
       <div className="space-y-4">
         {testCases.map((testCase) => (
-          <Card
-            key={testCase.id}
-            className="cursor-pointer transition-colors hover:bg-accent/50"
-            onClick={() => navigate({ to: `/test-cases/${testCase.id}` })}
-          >
+          <Card key={testCase.id.toString()}>
             <CardContent className="flex items-center justify-between p-6">
               <div className="flex items-start gap-4">
                 <TestTube className="mt-1 h-5 w-5 text-primary" />
-                <div>
-                  <h3 className="font-semibold">{testCase.title}</h3>
-                  <div className="mt-2 flex gap-2">
-                    <Badge variant="outline">{testCase.category}</Badge>
-                    <Badge variant="default">{testCase.priority}</Badge>
-                    <Badge variant="secondary">{testCase.status}</Badge>
-                  </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold">{testCase.description}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">
+                    {testCase.steps}
+                  </p>
                 </div>
               </div>
             </CardContent>
