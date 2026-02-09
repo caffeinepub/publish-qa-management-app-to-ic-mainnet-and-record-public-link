@@ -1,13 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add a URL-based “Web App Testing” generator that creates a baseline test plan (test cases, bug list, and corner/edge cases) for a pasted website URL, with an “Auto + Manual” workflow and saved history.
+**Goal:** Generate a comprehensive baseline dataset (test cases, bugs, corner/edge-case scenarios) for a website and ensure all pages display and edit real generated content (not mock placeholders).
 
 **Planned changes:**
-- Add a new “Web App Testing” generator page with a URL input, client-side validation (http/https + valid hostname), and a primary “Generate” action.
-- Implement deterministic, template-based backend generation (no crawling/fetching and no external AI/APIs) that returns 20+ test cases, 10+ bug suggestions, and 10+ corner cases per URL with clear English titles and step-by-step content where applicable.
-- Add backend persistence for target websites (id, url, createdAt, updatedAt) and their generated artifacts, scoped per user, so results can be revisited after refresh.
-- Add an “Auto + Manual” results workflow: users can add/edit/delete test cases and bugs and have those changes persist without being overwritten; UI distinguishes generated vs user-created/edited items.
-- Integrate the generator into navigation/routing and allow selecting previously created target websites (history) to view their test cases, bugs, and corner cases in the selected target context.
+- Expand the backend template-based generator to produce a noticeably larger set of test cases, bugs, and corner cases covering common web-app areas (navigation, forms, auth/session, permissions, responsive/mobile, performance, accessibility, error states, etc.) without crawling the target URL.
+- Fix backend ID assignment so generated TestCase/Bug/CornerCase items always receive unique IDs and the next-id counters increment correctly across generations.
+- Update Bug/Test Case detail and edit pages to load and persist changes for the real items from the currently selected website (remove mock-data usage).
+- Ensure Web App Testing, Bugs list, and Test Cases list render the full generated datasets with correct loading/empty states and scrollable, non-truncated lists.
 
-**User-visible outcome:** Users can paste a website URL, generate a saved baseline set of test cases/bugs/corner cases, revisit prior URLs from history, and manually refine (add/edit/delete) test cases and bugs with changes preserved.
+**User-visible outcome:** After generating data for a website, users can see dozens of generated test cases, bugs, and corner cases across the app; open any item to view real details; edit and save changes; and browse full lists without missing/truncated content.

@@ -2,8 +2,9 @@ import { SectionPage } from '@/components/SectionPage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Bug, AlertCircle } from 'lucide-react';
-import { useNavigate } from '@tanstack/react-router';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Plus, Bug, AlertCircle, Eye } from 'lucide-react';
+import { useNavigate, Link } from '@tanstack/react-router';
 import { useGetWebsite } from '@/hooks/useQueries';
 import { getSelectedWebsiteId } from '@/lib/websiteSelection';
 
@@ -35,9 +36,11 @@ export function BugListPage() {
             <p className="mb-4 text-center text-sm text-muted-foreground">
               Please generate test data for a website first to view bugs
             </p>
-            <Button onClick={() => navigate({ to: '/web-app-testing' })}>
-              <Plus className="mr-2 h-4 w-4" />
-              Go to Web App Testing
+            <Button asChild>
+              <Link to="/web-app-testing">
+                <Plus className="mr-2 h-4 w-4" />
+                Go to Web App Testing
+              </Link>
             </Button>
           </CardContent>
         </Card>
@@ -80,8 +83,8 @@ export function BugListPage() {
             <p className="mb-4 text-sm text-muted-foreground">
               Add bugs from the Web App Testing page
             </p>
-            <Button onClick={() => navigate({ to: '/web-app-testing' })}>
-              Go to Web App Testing
+            <Button asChild>
+              <Link to="/web-app-testing">Go to Web App Testing</Link>
             </Button>
           </CardContent>
         </Card>
@@ -94,23 +97,39 @@ export function BugListPage() {
       title="Bugs"
       description={`Bugs for ${selectedWebsite.title}`}
     >
-      <div className="space-y-4">
-        {bugs.map((bug) => (
-          <Card key={bug.id.toString()}>
-            <CardContent className="flex items-center justify-between p-6">
-              <div className="flex items-start gap-4">
-                <Bug className="mt-1 h-5 w-5 text-destructive" />
-                <div>
-                  <h3 className="font-semibold">{bug.description}</h3>
-                  <div className="mt-2 flex gap-2">
-                    <Badge variant={getSeverityColor(bug.severity)}>{bug.severity}</Badge>
+      <ScrollArea className="h-[calc(100vh-16rem)]">
+        <div className="space-y-4 pr-4">
+          {bugs.map((bug) => (
+            <Card 
+              key={bug.id.toString()} 
+              className="cursor-pointer transition-colors hover:bg-accent"
+              onClick={() => navigate({ to: `/bugs/${bug.id.toString()}` })}
+            >
+              <CardContent className="flex items-center justify-between p-6">
+                <div className="flex items-start gap-4 flex-1">
+                  <Bug className="mt-1 h-5 w-5 text-destructive flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold">{bug.description}</h3>
+                    <div className="mt-2 flex gap-2">
+                      <Badge variant={getSeverityColor(bug.severity)}>{bug.severity}</Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate({ to: `/bugs/${bug.id.toString()}` });
+                  }}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </ScrollArea>
     </SectionPage>
   );
 }

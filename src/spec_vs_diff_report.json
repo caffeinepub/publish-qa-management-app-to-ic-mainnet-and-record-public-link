@@ -1,88 +1,48 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T06:55:14.080Z",
-  "summary": "Diff adds a new Web App Testing page with URL validation, routing/nav integration, and React Query hooks for generating and CRUD’ing website-scoped test artifacts. Backend adds initial Website/TestCase/Bug/CornerCase models and a generateWebsiteTestingData method, but generation is far below required volume and backend persistence fields/methods required by the spec are not evidenced in the truncated diff.",
+  "generatedAt": "2026-02-09T09:24:46.779Z",
+  "summary": "Backend ID assignment during generation appears to be fixed (REQ-2) via startId-based generation and counter increments, and frontend bug/test-case detail/upsert pages now load real data from the selected website with clear empty/error states and navigation links (REQ-3). Large-list usability is addressed on Bugs/Test Cases list pages via ScrollArea and loading/empty states, but the backend generator is not shown expanded to a comprehensive “dozens of items” baseline across testCases/bugs/cornerCases (REQ-1).",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Backend target website entries must include (at minimum) id, url, createdAt, updatedAt; expose create/list/get methods; store generated artifacts per website; scope all data to calling principal; allow reload after refresh.",
-      "reason": "Backend Website type shown includes id/owner/url/title and arrays but does not include createdAt/updatedAt. The required create/list/get methods and persistence behavior across refresh cannot be confirmed from the provided truncated backend diff (hooks call getWebsitesByUser/getWebsite, but their backend implementations are not shown).",
-      "evidence": [
-        "backend/main.mo (Website type lacks createdAt/updatedAt; only generateWebsiteTestingData shown)",
-        "frontend/src/hooks/useQueries.ts (calls getWebsitesByUser/getWebsite but backend methods not evidenced)"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "Deterministic, template-based generation must produce 20+ test cases, 10+ bug suggestions, and 10+ corner cases with clear English titles and step-by-step content; stable for same URL.",
-      "reason": "Backend generation functions shown return only 2 items each (testCases/bugs/cornerCases), far below required minimum counts. Test cases are minimal and only partially step-by-step; bugs/corner cases are brief. Also IDs appear to be computed (nextTestCaseId + 1 etc.) without evidence of incrementing the counters per item, which risks duplicate IDs across generations.",
-      "evidence": [
-        "backend/main.mo (generateTestCases/generateBugs/generateCornerCases each returns 2 items; ID counters not incremented within generation)"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "requirement": "UI must clearly distinguish generated items vs user-edited/user-created items; manual edits must not be overwritten when revisiting the same target website.",
-      "reason": "Diff shows editing/CRUD hooks and UI elements (badges/dialog) but provides no clear evidence of any persisted flag/metadata (e.g., generated vs user-edited) in backend types, nor evidence of UI labeling logic. Backend types shown (TestCase/Bug/CornerCase) do not include fields to distinguish generated vs user-created/edited.",
-      "evidence": [
-        "backend/main.mo (TestCase/Bug/CornerCase types only have id/description/steps|severity|scenario)",
-        "frontend/src/pages/WebAppTestingPage.tsx (uses Badge and edit dialogs, but truncation provides no evidence of generated-vs-manual distinction)"
-      ]
-    },
-    {
       "id": "REQ-1",
-      "requirement": "Submitting a valid URL results in visible generated outputs for: test cases, bug list, and corner cases.",
-      "reason": "The WebAppTestingPage implementation is truncated before showing the results rendering; while hooks for loading website data exist, the diff excerpt does not conclusively show that all three outputs are displayed after generation.",
+      "requirement": "Expand the backend template-based generator to produce a comprehensive baseline dataset (dozens of items) across testCases, bugs, and cornerCases covering multiple web-app areas, remaining deterministic/offline.",
+      "reason": "The diff shows only a couple of generated test cases and indicates more are TODO (“Add more comprehensive test cases here”). The bugs/corner-cases generators are truncated and not evidenced as expanded to dozens of items or coverage across the required areas.",
       "evidence": [
-        "frontend/src/pages/WebAppTestingPage.tsx (truncated before results UI)"
+        "backend/main.mo"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Introduced explicit authentication gating (RequireAuth wrapper) and Login/Logout UI around multiple routes, plus actor initialization that injects an admin token from URL parameters.",
-      "reason": "The BuildRequest did not request adding new auth UI/route guards or admin-token-based access-control initialization; it only constrained auth providers (Internet Identity only).",
+      "description": "Wrap bug/test-case detail and upsert routes with RequireAuth (additional auth gating beyond the stated requirements).",
+      "reason": "REQ-3/REQ-4 request replacing mock data and improving rendering/UX for generated content; they do not request adding/changing route-level auth behavior for these pages.",
       "evidence": [
-        "frontend/src/components/RequireAuth.tsx",
-        "frontend/src/components/LoginButton.tsx",
-        "frontend/src/App.tsx (routes wrapped with RequireAuth)",
-        "frontend/src/hooks/useActor.ts (admin token via getSecretParameter + _initializeAccessControlWithSecret)",
-        "frontend/src/utils/urlParams.ts"
+        "frontend/src/App.tsx"
       ]
     },
     {
-      "description": "Added deployment documentation/artifact recording and mainnet deploy runbooks.",
-      "reason": "Not requested by any REQ; unrelated to URL-based generator and Auto+Manual workflow.",
+      "description": "Added a data migration module and configured the actor to run migration logic.",
+      "reason": "While related to ID consistency, the BuildRequest did not explicitly request introducing a migration module/file; this is additional functionality/structure beyond the stated requirements.",
       "evidence": [
-        "frontend-file-summaries.txt (frontend/DEPLOY_MAINNET.md, frontend/DEPLOYMENT_LINKS.md, frontend/scripts/recordDeploymentArtifact.js)"
-      ]
-    },
-    {
-      "description": "Modified AppShell footer branding/linking to caffeine.ai.",
-      "reason": "Not requested by the BuildRequest requirements.",
-      "evidence": [
-        "frontend/src/components/AppShell.tsx"
+        "backend/migration.mo",
+        "backend/main.mo"
       ]
     }
   ],
-  "confidence": 0.74,
+  "confidence": 0.68,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
     "frontend/src/App.tsx",
-    "frontend/src/components/AppShell.tsx",
-    "frontend/src/components/LoginButton.tsx",
-    "frontend/src/components/RequireAuth.tsx",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/lib/urlValidation.ts",
-    "frontend/src/lib/websiteSelection.ts",
+    "frontend/src/pages/BugDetailPage.tsx",
     "frontend/src/pages/BugListPage.tsx",
+    "frontend/src/pages/BugUpsertPage.tsx",
+    "frontend/src/pages/TestCaseDetailPage.tsx",
     "frontend/src/pages/TestCaseListPage.tsx",
+    "frontend/src/pages/TestCaseUpsertPage.tsx",
     "frontend/src/pages/WebAppTestingPage.tsx",
-    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

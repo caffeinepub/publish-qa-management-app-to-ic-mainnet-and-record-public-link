@@ -4,10 +4,13 @@ import Runtime "mo:core/Runtime";
 import Text "mo:core/Text";
 import Iter "mo:core/Iter";
 import Principal "mo:core/Principal";
+import Nat "mo:core/Nat";
 import Migration "migration";
+
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
+// Specify the data migration function in with-clause
 (with migration = Migration.run)
 actor {
   // Include authorization mixin
@@ -43,32 +46,32 @@ actor {
   };
 
   // Website Testing Data Types
-  type TestCase = {
+  public type TestCase = {
     id : Nat;
     description : Text;
     steps : Text;
   };
 
-  type Bug = {
+  public type Bug = {
     id : Nat;
     description : Text;
     severity : Severity;
   };
 
-  type CornerCase = {
+  public type CornerCase = {
     id : Nat;
     description : Text;
     scenario : Text;
   };
 
-  type Severity = {
+  public type Severity = {
     #low;
     #medium;
     #high;
     #critical;
   };
 
-  type Website = {
+  public type Website = {
     id : Nat;
     owner : Principal;
     url : Text;
@@ -94,9 +97,13 @@ actor {
     let websiteId = nextWebsiteId;
     nextWebsiteId += 1;
 
-    let testCases = generateTestCases(url);
-    let bugs = generateBugs(url);
-    let cornerCases = generateCornerCases(url);
+    let (testCases, lastTestCaseId) = generateTestCases(url, nextTestCaseId);
+    let (bugs, lastBugId) = generateBugs(url, nextBugId);
+    let (cornerCases, lastCornerCaseId) = generateCornerCases(url, nextCornerCaseId);
+
+    nextTestCaseId := lastTestCaseId + 1;
+    nextBugId := lastBugId + 1;
+    nextCornerCaseId := lastCornerCaseId + 1;
 
     let website : Website = {
       id = websiteId;
@@ -112,53 +119,62 @@ actor {
     websiteId;
   };
 
-  func generateTestCases(url : Text) : [TestCase] {
-    [
+  func generateTestCases(_url : Text, startId : Nat) : ([TestCase], Nat) {
+    let testCases = [
       {
-        id = nextTestCaseId;
-        description = "Verify homepage loads successfully for " # url;
-        steps = "1. Navigate to " # url # " 2. Check page elements render";
+        id = startId;
+        description = "Verify homepage loads successfully";
+        steps = "Navigate to homepage and check elements";
       },
       {
-        id = nextTestCaseId + 1;
+        id = startId + 1;
         description = "Test navigation to About page";
-        steps = "Click on About menu item and verify content";
+        steps = "Click About menu and verify content";
       },
+      // Add more comprehensive test cases here
     ];
+    (testCases, startId + testCases.size());
   };
 
-  func generateBugs(url : Text) : [Bug] {
-    [
+  func generateBugs(_url : Text, startId : Nat) : ([Bug], Nat) {
+    let bugs = [
       {
-        id = nextBugId;
+        id = startId;
         description = "Potential layout issue on mobile devices";
         severity = #medium;
       },
       {
-        id = nextBugId + 1;
+        id = startId + 1;
         description = "Broken image resource detected";
         severity = #low;
       },
+      // Add more comprehensive bugs here
     ];
+    (bugs, startId + bugs.size());
   };
 
-  func generateCornerCases(url : Text) : [CornerCase] {
-    [
+  func generateCornerCases(_url : Text, startId : Nat) : ([CornerCase], Nat) {
+    let cornerCases = [
       {
-        id = nextCornerCaseId;
+        id = startId;
         description = "Load site with no internet connection";
         scenario = "Simulate offline access and observe behavior";
       },
       {
-        id = nextCornerCaseId + 1;
+        id = startId + 1;
         description = "Test with unsupported browser version";
         scenario = "Use legacy browser and check compatibility";
       },
+      // Add more comprehensive corner cases here
     ];
+    (cornerCases, startId + cornerCases.size());
   };
 
   // Query all websites for current user
   public query ({ caller }) func getWebsitesByUser() : async [Website] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can access websites");
+    };
     websites.values().toArray().filter(
       func(website) {
         website.owner == caller;

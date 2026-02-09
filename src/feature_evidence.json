@@ -2,53 +2,34 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-web-app-testing-generator-flow-where-a-user-can-paste-a-website-url-click-generate-and-receive-a-generated-test-cases-b-a-generated-bug-list-and-c-generated-corner-edge-cases-for-that-target-website",
-      "featureTitle": "Add a new \"Web App Testing\" generator flow where a user can paste a website URL, click \"Generate\", and receive (a) generated test cases, (b) a generated bug list, and (c) generated corner/edge cases for that target website.",
-      "files": [
-        "frontend/src/components/LoginButton.tsx",
-        "frontend/src/components/RequireAuth.tsx",
-        "frontend/src/lib/urlValidation.ts",
-        "frontend/src/pages/WebAppTestingPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-an-auto-manual-workflow-after-generation-allow-users-to-review-and-manually-add-edit-delete-test-cases-and-bugs-within-the-app-ui-starting-from-the-generated-baseline-for-a-given-target-website",
-      "featureTitle": "Add an \"Auto + Manual\" workflow: after generation, allow users to review and manually add/edit/delete test cases and bugs within the app UI, starting from the generated baseline for a given target website.",
-      "files": [
-        "frontend/src/pages/WebAppTestingPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-integrate-the-generator-into-the-existing-navigation-and-routing-so-users-can-easily-access-it-and-connect-existing-test-cases-bugs-areas-to-the-selected-target-website-context",
-      "featureTitle": "Integrate the generator into the existing navigation and routing so users can easily access it, and connect existing Test Cases / Bugs areas to the selected target website context.",
+      "featureId": "feature-replace-mock-data-usage-in-bugdetailpage-testcasedetailpage-and-related-upsert-pages-if-they-use-mock-submission-so-that-detail-edit-views-display-and-edit-the-real-items-from-the-selected-website-stored-in-the-backend",
+      "featureTitle": "Replace mock-data usage in BugDetailPage/TestCaseDetailPage (and related upsert pages if they use mock submission) so that detail/edit views display and edit the real items from the selected website stored in the backend.",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/components/AppShell.tsx",
-        "frontend/src/lib/websiteSelection.ts",
+        "frontend/src/pages/BugDetailPage.tsx",
+        "frontend/src/pages/BugListPage.tsx",
+        "frontend/src/pages/BugUpsertPage.tsx",
+        "frontend/src/pages/TestCaseDetailPage.tsx",
+        "frontend/src/pages/TestCaseListPage.tsx",
+        "frontend/src/pages/TestCaseUpsertPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-all-pages-that-read-generated-content-web-app-testing-bugs-list-test-cases-list-clearly-render-the-full-generated-datasets-and-provide-basic-ux-to-handle-large-lists-at-minimum-loading-states-remain-correct-and-lists-are-scrollable-without-truncation",
+      "featureTitle": "Ensure all pages that read generated content (Web App Testing, Bugs list, Test Cases list) clearly render the full generated datasets and provide basic UX to handle large lists (at minimum: loading states remain correct and lists are scrollable without truncation).",
+      "files": [
         "frontend/src/pages/BugListPage.tsx",
         "frontend/src/pages/TestCaseListPage.tsx",
         "frontend/src/pages/WebAppTestingPage.tsx"
@@ -62,7 +43,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-5"
+        "REQ-4"
       ],
       "confidence": "high"
     }

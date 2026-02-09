@@ -1,106 +1,77 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "URL-based Web App Testing generator with Auto + Manual editing (frontend)",
+  "title": "Show full generated QA content and replace mock detail/edit pages with real backend data",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Create a Web App Testing generator page with URL input, client-side validation, and generated results rendering (test cases, bugs, corner cases) without external AI services.",
+      "id": "REQ-3",
+      "summary": "Replace mock bug/test-case detail + edit pages with real selected-website data and persist edits via backend mutations",
       "acceptanceCriteria": [
-        "Frontend provides a URL input field and a primary \"Generate\" action.",
-        "URL is validated client-side (must be http/https and a valid hostname); invalid input blocks generation with a clear error message.",
-        "Submitting a valid URL results in visible generated outputs for: test cases, bug list, and corner cases.",
-        "Generation works without using any external AI/LLM services or third-party APIs."
+        "Navigating from a bug/test case list to its detail page shows the actual selectedWebsite item data (description/steps/severity, etc.), not placeholder/mock content.",
+        "Editing a bug/test case from its edit page persists changes via existing backend mutations and is reflected when returning to the list and the generator page.",
+        "If no selected website is set or the item id is not found, the UI shows a clear English empty/error state with a link back to /web-app-testing."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/WebAppTestingPage.tsx",
-          "operation": "create",
-          "description": "Add the \"Web App Testing\" generator flow UI: URL input + \"Generate\" action, error messaging for invalid URLs, and results sections for test cases, bugs, and corner cases using backend-provided generation and website retrieval. Compose existing shadcn/ui components (e.g., Button/Input/Card/Tabs/Badge/Dialog/Textarea) to build the screen; verify the component's usage instructions before implementing."
+          "path": "frontend/src/pages/BugDetailPage.tsx",
+          "operation": "modify",
+          "description": "Remove mock bug object and load the real Bug by (a) reading the current selected website id (websiteSelection) and (b) fetching the Website via useGetWebsite, then finding the bug by the route bugId. Render actual backend fields (description + severity) and provide a clear not-found / no-website-selected state with a link back to /web-app-testing. Use existing shadcn/ui components already imported for layout; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/hooks/useWebAppTesting.ts",
-          "operation": "create",
-          "description": "Create React Query hooks for generator and data loading: list user websites, generate for URL, fetch a selected website, and provide typed helpers around the backend actor calls. Ensure hooks are disabled until the actor is available. Verify the component's usage instructions before implementing."
+          "path": "frontend/src/pages/TestCaseDetailPage.tsx",
+          "operation": "modify",
+          "description": "Remove mock test case object and load the real TestCase by selected website id + useGetWebsite, then find by route testCaseId. Render actual backend fields (description + steps) and provide a clear not-found / no-website-selected state with a link back to /web-app-testing. Use existing shadcn/ui components already imported for layout; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/lib/urlValidation.ts",
-          "operation": "create",
-          "description": "Add a small URL validation/normalization utility for the generator input (http/https required, valid hostname, trimmed input). Used to block generation and show clear English errors for invalid input."
+          "path": "frontend/src/pages/BugUpsertPage.tsx",
+          "operation": "modify",
+          "description": "Replace mock submit flow with real add/update behavior using useAddBug/useUpdateBug and selected website id. For edit mode, prefill the form from selectedWebsite.bugs by bugId; if missing, show an error state with link back to /web-app-testing. Align form fields to backend-supported Bug fields (description + severity), and on success navigate back to /bugs (keeping the selected website via websiteSelection URL/localStorage). Use existing shadcn/ui form controls; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/RequireAuth.tsx",
-          "operation": "create",
-          "description": "Add an authentication gate wrapper that checks Internet Identity state and blocks access to generator data when logged out, showing an English login prompt and a login button. Verify the component's usage instructions before implementing."
+          "path": "frontend/src/pages/TestCaseUpsertPage.tsx",
+          "operation": "modify",
+          "description": "Replace mock submit flow with real add/update behavior using useAddTestCase/useUpdateTestCase and selected website id. For edit mode, prefill the form from selectedWebsite.testCases by testCaseId; if missing, show an error state with link back to /web-app-testing. Align form fields to backend-supported TestCase fields (description + steps), and on success navigate back to /test-cases (keeping the selected website via websiteSelection URL/localStorage). Use existing shadcn/ui form controls; verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/LoginButton.tsx",
-          "operation": "create",
-          "description": "Add a reusable Login/Logout button using the existing Internet Identity hook and clearing React Query cache on logout (per selected authorization component guidance). Verify the component's usage instructions before implementing."
+          "path": "frontend/src/pages/BugListPage.tsx",
+          "operation": "modify",
+          "description": "Wire list -> detail navigation by making each bug row/card clickable (or adding an explicit 'View' action) to navigate to /bugs/$bugId. Ensure the list continues to use selectedWebsite from backend (no mock data). Use existing shadcn/ui Card/Button; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/TestCaseListPage.tsx",
+          "operation": "modify",
+          "description": "Wire list -> detail navigation by making each test case row/card clickable (or adding an explicit 'View' action) to navigate to /test-cases/$testCaseId. Ensure the list continues to use selectedWebsite from backend (no mock data). Use existing shadcn/ui Card/Button; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure bug/test-case detail and upsert routes are protected consistently (wrap BugDetailPage, BugUpsertPage, TestCaseDetailPage, TestCaseUpsertPage routes in RequireAuth) so application data isn’t visible without authentication. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Enable Auto + Manual workflow in the results view: edit/add/delete test cases and bugs with persistence, and clearly label generated vs user-modified items.",
+      "summary": "Render complete generated datasets on Web App Testing + list pages with usable scrolling and correct loading states for large lists",
       "acceptanceCriteria": [
-        "From a generated results view, the user can: edit a generated test case, add a new test case, and delete a test case; changes persist to the backend.",
-        "From a generated results view, the user can: edit a generated bug suggestion, add a new bug, and delete a bug; changes persist to the backend.",
-        "Manual edits do not get overwritten when the user revisits the same target website’s results.",
-        "UI clearly distinguishes generated items vs user-edited/user-created items (e.g., label or badge)."
+        "After generating a website, the Web App Testing page shows all generated test cases/bugs/corner cases in their respective tabs without cutting off items.",
+        "The Bugs and Test Cases pages display all items associated with the currently selected website id.",
+        "Large lists remain usable (no missing items due to rendering or state issues)."
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/WebAppTestingPage.tsx",
           "operation": "modify",
-          "description": "Extend results UI to support manual add/edit/delete for test cases and bugs (and allow add/edit/delete for corner cases where supported by backend). Use modal/dialog or inline editor patterns composed from existing shadcn/ui components, show success/error toasts, and display badges/labels to distinguish generated vs user-modified/user-created items (based on local UI state such as \"edited\"/\"created\" tracked per item for the current session and/or via backend-returned fields if present). Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useWebAppTesting.ts",
-          "operation": "modify",
-          "description": "Add React Query mutations for add/update/delete operations for test cases, bugs, and corner cases (using the backend actor methods), and invalidate/refetch the selected website + website list queries after mutations to ensure persistence is reflected on revisit."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Wire generator into routing/navigation and scope existing Bugs/Test Cases views to the selected target website context with history selection.",
-      "acceptanceCriteria": [
-        "A new navigation entry exists (e.g., \"Web App Testing\" or \"Generator\") that routes to the generator page.",
-        "Generator page includes a way to see/select previously created target websites (history list) and open their generated results.",
-        "When a target website is selected, the UI shows test cases, bug list, and corner cases for that target website.",
-        "User-facing text across the generator pages is in English."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register a new route for the Web App Testing generator page and wrap it (and other data-backed pages as needed) with the RequireAuth gate to ensure users must be logged in before accessing persisted testing data."
-        },
-        {
-          "path": "frontend/src/components/AppShell.tsx",
-          "operation": "modify",
-          "description": "Add a new navigation entry (\"Web App Testing\" or \"Generator\") pointing to the new generator route, using existing shadcn/ui Button/Sheet patterns already in this file. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/WebAppTestingPage.tsx",
-          "operation": "modify",
-          "description": "Add a history list UI (previously generated websites) with selection that loads the chosen website’s artifacts into the page, and provide actions to navigate to the existing Bugs and Test Cases sections in the context of the selected website (e.g., via query string like websiteId=... or shared selection state). Ensure all user-facing text is English. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/lib/websiteSelection.ts",
-          "operation": "create",
-          "description": "Add a tiny selection-state helper (e.g., read/write selected website id via URL search params and/or localStorage) so the generator, Bugs, and Test Cases pages can share the current target website context without adding new top-level pages."
+          "description": "Improve large-list UX by ensuring each results tab renders the full arrays without truncation and remains scrollable (e.g., wrap tab lists in shadcn/ui ScrollArea with an appropriate height while keeping headers/actions visible). Preserve existing loading states (generateMutation pending, website loading) and ensure counts match list sizes. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/pages/BugListPage.tsx",
           "operation": "modify",
-          "description": "Replace mock bug list with website-scoped bugs loaded from the selected website context (from URL/local selection). If no website is selected, show an English empty/prompt state that links to the Web App Testing generator. Use existing shadcn/ui Card/Badge components for rendering; verify the component's usage instructions before implementing."
+          "description": "Ensure the bugs list is scrollable and does not visually truncate when many items exist (e.g., wrap the list in shadcn/ui ScrollArea or apply safe overflow handling within the page layout). Keep the existing loading/empty/no-selection states correct. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/pages/TestCaseListPage.tsx",
           "operation": "modify",
-          "description": "Replace mock test case list with website-scoped test cases loaded from the selected website context (from URL/local selection). If no website is selected, show an English empty/prompt state that links to the Web App Testing generator. Use existing shadcn/ui Card/Badge components for rendering; verify the component's usage instructions before implementing."
+          "description": "Ensure the test cases list is scrollable and does not visually truncate when many items exist (e.g., wrap the list in shadcn/ui ScrollArea or apply safe overflow handling within the page layout). Keep the existing loading/empty/no-selection states correct. Verify the component's usage instructions before implementing."
         }
       ]
     }

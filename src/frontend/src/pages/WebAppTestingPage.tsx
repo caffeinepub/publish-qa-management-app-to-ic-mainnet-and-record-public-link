@@ -291,7 +291,7 @@ export function WebAppTestingPage() {
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[200px]">
-                <div className="space-y-2">
+                <div className="space-y-2 pr-4">
                   {websites.map((website) => (
                     <button
                       key={website.id.toString()}
@@ -355,38 +355,40 @@ export function WebAppTestingPage() {
                       Add Test Case
                     </Button>
                   </div>
-                  <div className="space-y-3">
-                    {selectedWebsite.testCases.map((testCase) => (
-                      <Card key={testCase.id.toString()}>
-                        <CardContent className="pt-6">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <h4 className="font-semibold">{testCase.description}</h4>
-                              <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">
-                                {testCase.steps}
-                              </p>
+                  <ScrollArea className="h-[500px]">
+                    <div className="space-y-3 pr-4">
+                      {selectedWebsite.testCases.map((testCase) => (
+                        <Card key={testCase.id.toString()}>
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <h4 className="font-semibold">{testCase.description}</h4>
+                                <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">
+                                  {testCase.steps}
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => openEditDialog('testCase', testCase)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => handleDelete('testCase', testCase.id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </div>
-                            <div className="flex gap-2">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => openEditDialog('testCase', testCase)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => handleDelete('testCase', testCase.id)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </ScrollArea>
                 </TabsContent>
 
                 <TabsContent value="bugs" className="space-y-4">
@@ -399,40 +401,42 @@ export function WebAppTestingPage() {
                       Add Bug
                     </Button>
                   </div>
-                  <div className="space-y-3">
-                    {selectedWebsite.bugs.map((bug) => (
-                      <Card key={bug.id.toString()}>
-                        <CardContent className="pt-6">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <h4 className="font-semibold">{bug.description}</h4>
-                                <Badge variant={getSeverityColor(bug.severity)}>
-                                  {bug.severity}
-                                </Badge>
+                  <ScrollArea className="h-[500px]">
+                    <div className="space-y-3 pr-4">
+                      {selectedWebsite.bugs.map((bug) => (
+                        <Card key={bug.id.toString()}>
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-semibold">{bug.description}</h4>
+                                  <Badge variant={getSeverityColor(bug.severity)}>
+                                    {bug.severity}
+                                  </Badge>
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => openEditDialog('bug', bug)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => handleDelete('bug', bug.id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
                               </div>
                             </div>
-                            <div className="flex gap-2">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => openEditDialog('bug', bug)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => handleDelete('bug', bug.id)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </ScrollArea>
                 </TabsContent>
 
                 <TabsContent value="cornerCases" className="space-y-4">
@@ -445,124 +449,122 @@ export function WebAppTestingPage() {
                       Add Corner Case
                     </Button>
                   </div>
-                  <div className="space-y-3">
-                    {selectedWebsite.cornerCases.map((cornerCase) => (
-                      <Card key={cornerCase.id.toString()}>
-                        <CardContent className="pt-6">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <h4 className="font-semibold">{cornerCase.description}</h4>
-                              <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">
-                                {cornerCase.scenario}
-                              </p>
+                  <ScrollArea className="h-[500px]">
+                    <div className="space-y-3 pr-4">
+                      {selectedWebsite.cornerCases.map((cornerCase) => (
+                        <Card key={cornerCase.id.toString()}>
+                          <CardContent className="pt-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <h4 className="font-semibold">{cornerCase.description}</h4>
+                                <p className="mt-2 text-sm text-muted-foreground whitespace-pre-wrap">
+                                  {cornerCase.scenario}
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => openEditDialog('cornerCase', cornerCase)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  onClick={() => handleDelete('cornerCase', cornerCase.id)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </div>
-                            <div className="flex gap-2">
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => openEditDialog('cornerCase', cornerCase)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => handleDelete('cornerCase', cornerCase.id)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </ScrollArea>
                 </TabsContent>
               </Tabs>
             </CardContent>
           </Card>
         )}
+      </div>
 
-        {/* Edit Dialog */}
-        <Dialog open={!!editingItem} onOpenChange={() => setEditingItem(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {editingItem?.isNew ? 'Add' : 'Edit'}{' '}
-                {editingItem?.type === 'testCase' ? 'Test Case' : editingItem?.type === 'bug' ? 'Bug' : 'Corner Case'}
-              </DialogTitle>
-              <DialogDescription>
-                {editingItem?.isNew ? 'Create a new' : 'Update the'}{' '}
-                {editingItem?.type === 'testCase' ? 'test case' : editingItem?.type === 'bug' ? 'bug' : 'corner case'}
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4">
+      {/* Edit Dialog */}
+      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {editingItem?.isNew ? 'Add' : 'Edit'}{' '}
+              {editingItem?.type === 'testCase' ? 'Test Case' : editingItem?.type === 'bug' ? 'Bug' : 'Corner Case'}
+            </DialogTitle>
+            <DialogDescription>
+              {editingItem?.isNew ? 'Create a new' : 'Update the'}{' '}
+              {editingItem?.type === 'testCase' ? 'test case' : editingItem?.type === 'bug' ? 'bug' : 'corner case'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={editFormData.description || ''}
+                onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                rows={3}
+              />
+            </div>
+            {editingItem?.type === 'testCase' && (
               <div className="space-y-2">
-                <Label htmlFor="edit-description">Description</Label>
-                <Input
-                  id="edit-description"
-                  value={editFormData.description || ''}
-                  onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                <Label htmlFor="steps">Steps</Label>
+                <Textarea
+                  id="steps"
+                  value={editFormData.steps || ''}
+                  onChange={(e) => setEditFormData({ ...editFormData, steps: e.target.value })}
+                  rows={4}
                 />
               </div>
-
-              {editingItem?.type === 'testCase' && (
-                <div className="space-y-2">
-                  <Label htmlFor="edit-steps">Steps</Label>
-                  <Textarea
-                    id="edit-steps"
-                    value={editFormData.steps || ''}
-                    onChange={(e) => setEditFormData({ ...editFormData, steps: e.target.value })}
-                    rows={4}
-                  />
-                </div>
-              )}
-
-              {editingItem?.type === 'bug' && (
-                <div className="space-y-2">
-                  <Label htmlFor="edit-severity">Severity</Label>
-                  <Select
-                    value={editFormData.severity || 'medium'}
-                    onValueChange={(value) => setEditFormData({ ...editFormData, severity: value })}
-                  >
-                    <SelectTrigger id="edit-severity">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Low</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                      <SelectItem value="critical">Critical</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {editingItem?.type === 'cornerCase' && (
-                <div className="space-y-2">
-                  <Label htmlFor="edit-scenario">Scenario</Label>
-                  <Textarea
-                    id="edit-scenario"
-                    value={editFormData.scenario || ''}
-                    onChange={(e) => setEditFormData({ ...editFormData, scenario: e.target.value })}
-                    rows={4}
-                  />
-                </div>
-              )}
-            </div>
-
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setEditingItem(null)}>
-                Cancel
-              </Button>
-              <Button onClick={handleSaveEdit}>
-                Save
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+            )}
+            {editingItem?.type === 'bug' && (
+              <div className="space-y-2">
+                <Label htmlFor="severity">Severity</Label>
+                <Select
+                  value={editFormData.severity || 'medium'}
+                  onValueChange={(value) => setEditFormData({ ...editFormData, severity: value })}
+                >
+                  <SelectTrigger id="severity">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="critical">Critical</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {editingItem?.type === 'cornerCase' && (
+              <div className="space-y-2">
+                <Label htmlFor="scenario">Scenario</Label>
+                <Textarea
+                  id="scenario"
+                  value={editFormData.scenario || ''}
+                  onChange={(e) => setEditFormData({ ...editFormData, scenario: e.target.value })}
+                  rows={4}
+                />
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingItem(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveEdit}>
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SectionPage>
   );
 }

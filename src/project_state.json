@@ -1,34 +1,26 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Build a Type 1 Web Application Testing Platform where users paste a website URL to auto-generate test cases, bug lists, and corner cases, with an additional manual editing section to add/modify test cases and results.",
+  "summary": "New project",
   "architectural_notes": [],
   "known_issues": [
-    "Build/implementation attempts are failing with messages like 'AI struggled' / 'couldn't implement that request' / 'build didn’t complete' when generating the platform."
+    "Website is showing only partial/few contents (user-reported)"
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-add-a-new-web-app-testing-generator-flow-where-a-user-can-paste-a-website-url-click-generate-and-receive-a-generated-test-cases-b-a-generated-bug-list-and-c-generated-corner-edge-cases-for-that-target-website",
-      "title": "Add a new \"Web App Testing\" generator flow where a user can paste a website URL, click \"Generate\", and receive (a) generated test cases, (b) a generated bug list, and (c) generated corner/edge cases for that target website.",
+      "id": "feature-replace-mock-data-usage-in-bugdetailpage-testcasedetailpage-and-related-upsert-pages-if-they-use-mock-submission-so-that-detail-edit-views-display-and-edit-the-real-items-from-the-selected-website-stored-in-the-backend",
+      "title": "Replace mock-data usage in BugDetailPage/TestCaseDetailPage (and related upsert pages if they use mock submission) so that detail/edit views display and edit the real items from the selected website stored in the backend.",
       "reqIds": [
-        "REQ-1"
+        "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-an-auto-manual-workflow-after-generation-allow-users-to-review-and-manually-add-edit-delete-test-cases-and-bugs-within-the-app-ui-starting-from-the-generated-baseline-for-a-given-target-website",
-      "title": "Add an \"Auto + Manual\" workflow: after generation, allow users to review and manually add/edit/delete test cases and bugs within the app UI, starting from the generated baseline for a given target website.",
+      "id": "feature-ensure-all-pages-that-read-generated-content-web-app-testing-bugs-list-test-cases-list-clearly-render-the-full-generated-datasets-and-provide-basic-ux-to-handle-large-lists-at-minimum-loading-states-remain-correct-and-lists-are-scrollable-without-truncation",
+      "title": "Ensure all pages that read generated content (Web App Testing, Bugs list, Test Cases list) clearly render the full generated datasets and provide basic UX to handle large lists (at minimum: loading states remain correct and lists are scrollable without truncation).",
       "reqIds": [
         "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-integrate-the-generator-into-the-existing-navigation-and-routing-so-users-can-easily-access-it-and-connect-existing-test-cases-bugs-areas-to-the-selected-target-website-context",
-      "title": "Integrate the generator into the existing navigation and routing so users can easily access it, and connect existing Test Cases / Bugs areas to the selected target website context.",
-      "reqIds": [
-        "REQ-5"
       ],
       "version": 1
     }
@@ -36,41 +28,28 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Type 1 Web Application Testing Platform: paste a website link to auto-generate test cases, bug list, corner cases, and functionality coverage",
+      "summary": "Provide comprehensive list of website bugs and test scenarios (all scenarios)",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Add 'Auto + Manual' workflow: after generating from URL, allow users to manually add/edit test cases and results",
-      "reqIds": [],
+      "summary": "Expand the backend template-based generator so that generating test data for a website produces a comprehensive baseline set of (a) test cases, (b) bugs, and (c) corner/edge-case scenarios instead of only a few items.",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Provide a clear UI for pasting a website URL and triggering generation (input box + Generate action)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Implement backend data models and persistence for \"target websites\" and their generated artifacts so each user can generate and revisit results for multiple URLs over time.",
+      "summary": "Fix backend ID assignment so all generated TestCase/Bug/CornerCase records have unique IDs and the next*Id counters are correctly incremented during generation (not just during manual add mutations).",
       "reqIds": [
         "REQ-2"
       ],
       "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Implement deterministic, template-based generation logic that produces a reasonable baseline set of test cases, bug suggestions, and corner cases from a URL, without attempting to crawl or fetch the target website content.",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Add URL-based test plan generator with Auto + Manual workflow",
+  "projectName": "Expand generated bug/scenario content and remove mock pages so all website content is shown",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

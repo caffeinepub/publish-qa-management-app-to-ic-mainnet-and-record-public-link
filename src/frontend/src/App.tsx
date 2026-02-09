@@ -60,19 +60,31 @@ const bugsRoute = createRoute({
 const bugDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/bugs/$bugId',
-  component: BugDetailPage,
+  component: () => (
+    <RequireAuth>
+      <BugDetailPage />
+    </RequireAuth>
+  ),
 });
 
 const bugCreateRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/bugs/new',
-  component: BugUpsertPage,
+  component: () => (
+    <RequireAuth>
+      <BugUpsertPage />
+    </RequireAuth>
+  ),
 });
 
 const bugEditRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/bugs/$bugId/edit',
-  component: BugUpsertPage,
+  component: () => (
+    <RequireAuth>
+      <BugUpsertPage />
+    </RequireAuth>
+  ),
 });
 
 // Test case routes
@@ -89,19 +101,31 @@ const testCasesRoute = createRoute({
 const testCaseDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/test-cases/$testCaseId',
-  component: TestCaseDetailPage,
+  component: () => (
+    <RequireAuth>
+      <TestCaseDetailPage />
+    </RequireAuth>
+  ),
 });
 
 const testCaseCreateRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/test-cases/new',
-  component: TestCaseUpsertPage,
+  component: () => (
+    <RequireAuth>
+      <TestCaseUpsertPage />
+    </RequireAuth>
+  ),
 });
 
 const testCaseEditRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/test-cases/$testCaseId/edit',
-  component: TestCaseUpsertPage,
+  component: () => (
+    <RequireAuth>
+      <TestCaseUpsertPage />
+    </RequireAuth>
+  ),
 });
 
 // Test run routes

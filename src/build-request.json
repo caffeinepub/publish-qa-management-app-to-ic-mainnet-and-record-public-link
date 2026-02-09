@@ -1,130 +1,90 @@
 {
   "kind": "build_request",
-  "title": "Add URL-based test plan generator with Auto + Manual workflow",
+  "title": "Expand generated bug/scenario content and remove mock pages so all website content is shown",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a new \"Web App Testing\" generator flow where a user can paste a website URL, click \"Generate\", and receive (a) generated test cases, (b) a generated bug list, and (c) generated corner/edge cases for that target website.",
-      "target": "both",
+      "text": "Expand the backend template-based generator so that generating test data for a website produces a comprehensive baseline set of (a) test cases, (b) bugs, and (c) corner/edge-case scenarios instead of only a few items.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1",
-          "msg-2",
-          "msg-3",
-          "msg-4",
-          "msg-5",
-          "msg-6"
+          "recent-messages"
         ],
         "quotes": [
-          "copy the website link and paste into it and i need test case, bug list ,corner cases all functionalities",
-          "type 1",
-          "i need to to test my project in this new website .. how will i paste the link",
-          "\"Auto + Manual\" (paste link → get results + you can add your own)",
-          "yes please generate"
+          "in this website only few contents are giving ,please give all bugs and all scenario"
         ]
       },
       "acceptanceCriteria": [
-        "Frontend provides a URL input field and a primary \"Generate\" action.",
-        "URL is validated client-side (must be http/https and a valid hostname); invalid input blocks generation with a clear error message.",
-        "Submitting a valid URL results in visible generated outputs for: test cases, bug list, and corner cases.",
-        "Generation works without using any external AI/LLM services or third-party APIs."
+        "Calling generateWebsiteTestingData(url, title) creates a noticeably larger baseline dataset (e.g., dozens of items) across testCases, bugs, and cornerCases for the created Website record.",
+        "Generated items cover multiple common web-app areas (navigation, forms, auth/session, permissions, content, responsive/mobile, performance, accessibility, error states, etc.) rather than only generic placeholders.",
+        "Generation remains deterministic/template-based (no crawling/fetching of the target URL’s live content)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement backend data models and persistence for \"target websites\" and their generated artifacts so each user can generate and revisit results for multiple URLs over time.",
+      "text": "Fix backend ID assignment so all generated TestCase/Bug/CornerCase records have unique IDs and the next*Id counters are correctly incremented during generation (not just during manual add mutations).",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-3",
-          "msg-6"
+          "recent-messages"
         ],
         "quotes": [
-          "copy the website link and paste into it and i need test case, bug list ,corner cases all functionalities",
-          "yes please generate"
+          "only few contents are giving"
         ]
       },
       "acceptanceCriteria": [
-        "Backend exposes methods to create/list/get target website entries (at minimum: id, url, createdAt, updatedAt).",
-        "Backend stores generated test cases, generated bug suggestions, and generated corner cases associated to a target website id.",
-        "All stored data is scoped to the calling principal (one user cannot read/modify another user’s targets and artifacts).",
-        "After a page refresh, previously generated targets and artifacts can be reloaded from the backend."
+        "Within a single website’s generated dataset, no two items share the same id for test cases, bugs, or corner cases.",
+        "Across multiple generateWebsiteTestingData calls, ids do not collide (each subsequent generation uses new ids).",
+        "Manual add/edit/delete operations continue to work with the generated ids (no broken updates/deletes due to duplicate ids)."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Implement deterministic, template-based generation logic that produces a reasonable baseline set of test cases, bug suggestions, and corner cases from a URL, without attempting to crawl or fetch the target website content.",
-      "target": "backend",
+      "text": "Replace mock-data usage in BugDetailPage/TestCaseDetailPage (and related upsert pages if they use mock submission) so that detail/edit views display and edit the real items from the selected website stored in the backend.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3",
-          "msg-5"
+          "recent-messages"
         ],
         "quotes": [
-          "copy the website link and paste into it and i need test case, bug list ,corner cases all functionalities",
-          "\"Auto + Manual\" (paste link → get results + you can add your own)"
+          "only few contents are giving"
         ]
       },
       "acceptanceCriteria": [
-        "Backend generation creates at least: 20+ test cases, 10+ bug suggestions, and 10+ corner cases for a new URL.",
-        "Generated items include clear English titles and step-by-step content (where applicable), not just single-line bullets.",
-        "Generated items include a mix of functional areas commonly applicable to web apps (e.g., navigation, forms, auth patterns, error states, accessibility, responsiveness, performance/smoke checks) while remaining generic (no claims about site-specific features).",
-        "Generation output is stable for the same URL (same input URL yields the same output unless a version/seed is explicitly changed)."
+        "Navigating from a bug/test case list to its detail page shows the actual selectedWebsite item data (description/steps/severity, etc.), not placeholder/mock content.",
+        "Editing a bug/test case from its edit page persists changes via existing backend mutations and is reflected when returning to the list and the generator page.",
+        "If no selected website is set or the item id is not found, the UI shows a clear English empty/error state with a link back to /web-app-testing."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Add an \"Auto + Manual\" workflow: after generation, allow users to review and manually add/edit/delete test cases and bugs within the app UI, starting from the generated baseline for a given target website.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "\"Auto + Manual\" (paste link → get results + you can add your own)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "From a generated results view, the user can: edit a generated test case, add a new test case, and delete a test case; changes persist to the backend.",
-        "From a generated results view, the user can: edit a generated bug suggestion, add a new bug, and delete a bug; changes persist to the backend.",
-        "Manual edits do not get overwritten when the user revisits the same target website’s results.",
-        "UI clearly distinguishes generated items vs user-edited/user-created items (e.g., label or badge)."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Integrate the generator into the existing navigation and routing so users can easily access it, and connect existing Test Cases / Bugs areas to the selected target website context.",
+      "text": "Ensure all pages that read generated content (Web App Testing, Bugs list, Test Cases list) clearly render the full generated datasets and provide basic UX to handle large lists (at minimum: loading states remain correct and lists are scrollable without truncation).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6",
-          "msg-7"
+          "recent-messages"
         ],
         "quotes": [
-          "i need to to test my project in this new website .. how will i paste the link",
-          "yes please generate"
+          "please give all bugs and all scenario"
         ]
       },
       "acceptanceCriteria": [
-        "A new navigation entry exists (e.g., \"Web App Testing\" or \"Generator\") that routes to the generator page.",
-        "Generator page includes a way to see/select previously created target websites (history list) and open their generated results.",
-        "When a target website is selected, the UI shows test cases, bug list, and corner cases for that target website.",
-        "User-facing text across the generator pages is in English."
+        "After generating a website, the Web App Testing page shows all generated test cases/bugs/corner cases in their respective tabs without cutting off items.",
+        "The Bugs and Test Cases pages display all items associated with the currently selected website id.",
+        "Large lists remain usable (no missing items due to rendering or state issues)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo (no multi-canister or microservices architecture).",
-    "Do not edit files under frontend/src/components/ui (compose existing shadcn components instead).",
-    "Do not modify frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and frontend/src/components/ui.",
-    "Do not use external databases or third-party AI/LLM APIs; generation must be implemented within the app (deterministic/template-based)."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not modify any files under frontend/src/components/ui or any other immutable paths listed in SYSTEM_CONTEXT.",
+    "Do not crawl/fetch/parse the target website content; generation must stay template-based and offline."
   ],
   "nonGoals": [
-    "Crawling, scraping, or fetching the target website’s HTML to infer real features.",
-    "Automated dynamic testing of the pasted URL (no browser automation, no Playwright/Selenium integration).",
-    "Real-time collaboration, chat, or WebSocket-driven updates.",
-    "Third-party authentication providers (only Internet Identity is allowed)."
+    "Implementing real-time collaboration or chat.",
+    "Integrating third-party auth providers (only Internet Identity is allowed).",
+    "Adding external databases or non-Motoko backend components."
   ],
   "imageRequirements": {
     "required": [],
